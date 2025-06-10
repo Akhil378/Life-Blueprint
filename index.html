@@ -10,7 +10,9 @@
     <!-- Chosen Palette: "Calm Neutral" - A palette using warm grays, soft beige, slate blue, and a gentle terracotta accent to create a calm, supportive, and harmonious feel. -->
     <!-- Application Structure Plan: The SPA is structured around the core pillars of the blueprint. A fixed sidebar navigation allows users to instantly switch between these thematic sections without scrolling a long page. This non-linear, focused approach enhances usability by letting users dive into a specific area of interest, explore its interactive components, and absorb information without being overwhelmed. The goal is to transform the dense report into a modular, explorable dashboard for personal growth, where each section offers a distinct interactive learning experience. -->
     <!-- Visualization & Content Choices: 
+        - Mindset/Trusting the Flow: Video Content -> Goal: Guide Self-Reflection -> Viz: Interactive Comparison -> Interaction: Click a mindset to see a reflective prompt -> Justification: Translates the video's core concept into an actionable tool for cultivating peace and patience. (HTML/CSS/JS).
         - Mindset/Cognitive Distortions: Report's Table 1 -> Goal: Organize/Inform -> Viz: Interactive flip-cards -> Interaction: Click to reveal details -> Justification: More engaging and tactile than a static table, encourages exploration. (HTML/CSS/JS).
+        - Health/Workout Plan: Text -> Goal: Organize/Guide -> Viz: Interactive Weekly Schedule -> Interaction: Click day to show workout -> Justification: Breaks down a long text-based plan into a manageable, interactive format, improving usability. (HTML/CSS/JS).
         - Health/Circadian Rhythm: Report's Table 4 -> Goal: Inform/Change -> Viz: Interactive 24-hour clock diagram -> Interaction: Click on time segments -> Justification: Visually represents time-based protocols more effectively than a list. (HTML/CSS/JS).
         - Grooming/Meal Plan: Report's Text -> Goal: Organize/Inform -> Viz: Tabbed interface & tables -> Interaction: Click to switch views -> Justification: Breaks down extensive text into manageable, interactive chunks. (HTML/CSS/JS).
         - Interpersonal/EQ: Report's Text -> Goal: Inform/Organize -> Viz: Radar Chart -> Interaction: Hover for tooltips -> Justification: Visually represents the multi-faceted nature of EQ. (Chart.js).
@@ -22,9 +24,9 @@
         .nav-item { transition: all 0.2s ease-in-out; }
         .nav-item.active { background-color: #D6E4F0; color: #1E3A8A; font-weight: 600; }
         .nav-item:not(.active):hover { background-color: #EAEAEA; }
-        .content-section, .grooming-tab-content, .meal-plan-content { display: none; }
-        .content-section.active, .grooming-tab-content.active, .meal-plan-content.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content-section, .grooming-tab-content, .meal-plan-content, .workout-day-content { display: none; }
+        .content-section.active, .grooming-tab-content.active, .meal-plan-content.active, .workout-day-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to: { opacity: 1; } }
         .card { perspective: 1000px; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
         .card.is-flipped .card-inner { transform: rotateY(180deg); }
@@ -37,6 +39,8 @@
         .chart-container { position: relative; width: 100%; max-width: 500px; margin: auto; height: 350px; max-height: 400px; }
         .tab-btn.active { background-color: #3B82F6; color: white; }
         .tab-btn { background-color: #E5E7EB; color: #374151; }
+        .trust-item.selected { background-color: #E0F2FE; }
+        .workout-day-btn.active { background-color: #1E3A8A; color: white; }
         @media (max-width: 768px) { .chart-container { height: 300px; } }
     </style>
 </head>
@@ -94,9 +98,37 @@
             <div id="mindset" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Mindset & Philosophy</h2>
                 <p class="text-lg text-gray-600 mb-8">This section explores the mental frameworks that shape your reality. Learn to cultivate a resilient and purposeful mind by understanding and reframing your thoughts, discovering authentic purpose, and satisfying your core psychological needs.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Trusting the Flow</h3>
+                    <p class="text-gray-600 mb-6">Peace comes not from controlling every outcome, but from trusting the timing of your life. What is meant for you will arrive when you are ready. The universe isn't punishing you; it's preparing you. Explore the two paths below.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-xl text-red-600 mb-3 text-center">Path of Resistance</h4>
+                            <ul class="space-y-3">
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="forcing">Forcing outcomes</li>
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="anxiety">Anxiety about the future</li>
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="impatience">Impatience with delays</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-xl text-green-600 mb-3 text-center">Path of Alignment</h4>
+                             <ul class="space-y-3">
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="allowing">Allowing things to unfold</li>
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="presence">Focusing on the present</li>
+                                <li class="trust-item p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-gray-100" data-trust="readiness">Working on your readiness</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="trust-display" class="mt-6 p-4 bg-blue-50 border-t-4 border-blue-500 rounded-b-lg min-h-[90px]">
+                        <p class="text-blue-800 text-center">Click on a mindset to reveal a reflective prompt.</p>
+                    </div>
+                </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Your Mind is a Garden: Cognitive Reframing</h3>
                 <p class="text-gray-600 mb-6">Your thoughts are not facts. Unhelpful thought patterns, or "cognitive distortions," are like weeds in a garden. By identifying and reframing them, you can cultivate a more positive and realistic inner landscape. Click on a card to learn how to reframe a common distortion.</p>
                 <div id="distortions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                
                 <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Reclaiming Ikigai: Authentic Daily Purpose</h3>
                 <p class="text-gray-600 mb-6">The popular Western Venn diagram of Ikigai can create pressure. Authentic Japanese Ikigai is more accessible—it's about finding joy and purpose in everyday moments and small rituals, not necessarily a single, grand, monetizable passion.</p>
                 <div class="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm">
@@ -119,6 +151,7 @@
                         </ul>
                     </div>
                 </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Thrive with Self-Determination Theory (SDT)</h3>
                 <p class="text-gray-600 mb-6">SDT proposes three universal psychological needs essential for well-being and motivation. Hover over each need to see how to cultivate it.</p>
                 <div id="sdt-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
@@ -126,7 +159,84 @@
 
             <div id="health" class="content-section">
                  <h2 class="text-3xl font-bold text-gray-800 mb-2">Health & Well-being</h2>
-                <p class="text-lg text-gray-600 mb-8">This section provides evidence-based protocols to optimize your physical and mental vitality. Master your biology through circadian science, advanced breathing techniques, and proven longevity habits.</p>
+                <p class="text-lg text-gray-600 mb-8">This section provides evidence-based protocols to optimize your physical and mental vitality. Master your biology through circadian science, advanced breathing techniques, and a structured workout plan.</p>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Complete Home Workout Plan</h3>
+                    <p class="text-gray-600 mb-6">This plan uses a push-up board, skipping rope, and hand grippers. Consistency and proper form are more important than speed. Click a day to see your workout.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="tue">Tue</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="wed">Wed</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="thu">Thu</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="fri">Fri</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="sat">Sat</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="sun">Sun</button>
+                        <button class="workout-day-btn tab-btn py-2 px-4 rounded-lg font-semibold" data-target="warmup">Warm-up/Cool-down</button>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg min-h-[200px]">
+                        <div id="tue" class="workout-day-content">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">Push Day (Chest, Shoulders, Triceps)</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Chest Press Push-ups (🟥 Red): 3 sets of AMRAP. Rest 60s.</li>
+                                <li>Shoulder Press Push-ups (🟦 Blue): 3 sets of AMRAP. Rest 60s.</li>
+                                <li>Triceps Extension Push-ups (🟨 Yellow): 3 sets of AMRAP. Rest 60s.</li>
+                                <li>Standard Push-ups (Floor): 1 final set of AMRAP.</li>
+                            </ul>
+                        </div>
+                        <div id="wed" class="workout-day-content">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">Legs & Cardio</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Intensive Skipping: 5 rounds of (1 min fast + 30s rest).</li>
+                                <li>Bodyweight Squats: 3 sets of 15-20 reps. Rest 45s.</li>
+                                <li>Alternating Lunges: 3 sets of 10-12 reps per leg. Rest 45s.</li>
+                                <li>Calf Raises: 3 sets of 20-25 reps. Rest 30s.</li>
+                                <li>Plank: 3 sets, hold for as long as you can.</li>
+                            </ul>
+                        </div>
+                        <div id="thu" class="workout-day-content">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">Pull Day (Back & Grip)</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Back Push-ups (🟩 Green): 3 sets of AMRAP. Rest 60s.</li>
+                                <li>"Superman" Lifts: 3 sets of 15 reps.</li>
+                                <li>Hand Gripper Squeezes: 1 set hold (max time), 2 sets of 10-15 reps per hand.</li>
+                            </ul>
+                        </div>
+                        <div id="fri" class="workout-day-content">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">Full Body Circuit (Repeat 3-4x)</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Skipping Rope: 60 seconds.</li>
+                                <li>Chest Push-ups (🟥 Red): 10 reps.</li>
+                                <li>Bodyweight Squats: 15 reps.</li>
+                                <li>Back Push-ups (🟩 Green): 10 reps.</li>
+                                <li>Plank: Hold for 30-45 seconds.</li>
+                                <li class="font-semibold">Rest 90 seconds after each full circuit.</li>
+                            </ul>
+                        </div>
+                        <div id="sat" class="workout-day-content">
+                            <h4 class="font-bold text-lg text-gray-800 mb-2">Push Day (Strength Focus)</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Weak Point First: 4 sets of AMRAP on your hardest push position.</li>
+                                <li>Strong Point (Elevated): 3 sets of AMRAP on your easiest push position.</li>
+                                <li>Diamond Push-ups (Floor): 3 sets of AMRAP.</li>
+                            </ul>
+                        </div>
+                        <div id="sun" class="workout-day-content">
+                             <h4 class="font-bold text-lg text-gray-800 mb-2">Active Recovery & Grip</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li>Endurance Skipping: 10-15 minutes at a steady pace.</li>
+                                <li>Hand Gripper Squeezes: Repeat Thursday's routine.</li>
+                                <li>Full Body Stretch: 10 minutes of deep, relaxing stretches.</li>
+                            </ul>
+                        </div>
+                         <div id="warmup" class="workout-day-content active">
+                             <h4 class="font-bold text-lg text-gray-800 mb-2">Warm-up & Cool-down</h4>
+                             <p class="text-gray-700 mb-3"><strong>Warm-up (5 mins before every workout):</strong> Light skipping, arm circles, leg swings, torso twists.</p>
+                             <p class="text-gray-700"><strong>Cool-down (5 mins after every workout):</strong> Slow walk, followed by 20-30 second static stretches for muscles worked.</p>
+                             <p class="mt-4 text-center text-gray-600">Select a day to view the workout.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Master Your Circadian Clock</h3>
                 <p class="text-gray-600 mb-6">Your body has an internal 24-hour clock that regulates energy, mood, and sleep. Aligning your daily habits with this rhythm is a powerful health intervention. Click on the time blocks below to see the key protocol for that period.</p>
                 <div class="w-full max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm">
@@ -138,6 +248,7 @@
                     </div>
                     <div id="circadian-display" class="text-center p-4 min-h-[150px]"></div>
                 </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">The Power of Coherent Breathing</h3>
                 <p class="text-gray-600 mb-6">Breathing at a rhythm of ~5.5 seconds in and 5.5 seconds out maximizes Heart Rate Variability (HRV), balancing your nervous system and promoting calm. Try it now with this visual pacer.</p>
                 <div class="flex flex-col items-center justify-center bg-white p-8 rounded-xl shadow-sm">
@@ -145,12 +256,6 @@
                         <span id="breathing-text" class="text-lg font-semibold text-gray-700">Ready?</span>
                     </div>
                     <button id="breathing-start-btn" class="mt-6 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Practice</button>
-                </div>
-                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Longevity Habits from the Blue Zones</h3>
-                <p class="text-gray-600 mb-6">The world's longest-lived people don't run marathons; they live in environments that nurture healthy habits. Explore their "Power 9" principles by clicking the icons.</p>
-                <div id="power9-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
-                <div id="power9-display" class="mt-4 bg-white p-6 rounded-xl shadow-sm min-h-[100px]">
-                    <p class="text-gray-600 text-center">Click an icon to learn more.</p>
                 </div>
             </div>
 
@@ -277,6 +382,7 @@
             <div id="interpersonal" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Interpersonal Excellence</h2>
                 <p class="text-lg text-gray-600 mb-8">This section focuses on mastering connection and influence. Learn to build stronger, more authentic relationships by integrating timeless principles of influence with modern frameworks of empathy and emotional intelligence.</p>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">The NVC Conversation Builder</h3>
                 <p class="text-gray-600 mb-6">Nonviolent Communication (NVC) transforms conflict into connection. Use this interactive tool to see how to reframe a judgmental statement into a clear, compassionate one using the four steps of NVC. Click "Next Step" to build the conversation.</p>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
@@ -288,6 +394,7 @@
                     <div id="nvc-steps-container" class="space-y-3"></div>
                     <button id="nvc-next-btn" class="mt-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Building</button>
                 </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">The 5 Components of Emotional Intelligence (EQ)</h3>
                 <p class="text-gray-600 mb-6">EQ is the ability to understand and manage your own emotions, and those of the people around you. It's a critical skill for life success. This chart visualizes the five core components. Hover over each point for a description.</p>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
@@ -384,10 +491,8 @@ document.addEventListener('DOMContentLoaded', function () {
     navItems.forEach(item => {
         item.addEventListener('click', function (e) {
             e.preventDefault();
-
             navItems.forEach(i => i.classList.remove('active'));
             contentSections.forEach(s => s.classList.remove('active'));
-
             this.classList.add('active');
             const targetId = this.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
@@ -415,18 +520,29 @@ document.addEventListener('DOMContentLoaded', function () {
         evening: { title: '🌙 Evening: Prepare for Rest', text: 'View sunset light if possible to signal evening to your brain. Crucially, dim indoor lights and avoid bright blue light from screens 2-3 hours before bed. This prevents the suppression of melatonin, the hormone that helps you sleep.' },
         sleep: { title: '😴 Sleep: Optimize Environment', text: 'Maintain a consistent sleep-wake schedule, even on weekends. Keep your bedroom as dark and cool as possible. A drop in core body temperature is a natural cue for sleep onset.' }
     };
+    
+    const trustData = {
+        forcing: { title: 'Prompt: Releasing Control', text: 'Where am I trying to force a specific outcome? What would it feel like to trust that the right outcome will unfold on its own?'},
+        anxiety: { title: 'Prompt: Calming Future-Anxiety', text: 'My anxiety about the future cannot change it. Today, I will focus my energy on this present moment, which is the only thing I truly have.'},
+        impatience: { title: 'Prompt: Embracing Delays', text: 'This delay is not a denial. It is a moment to prepare. What can I do right now to become more ready for what I desire?'},
+        allowing: { title: 'Prompt: The Practice of Allowing', text: 'I release my tight grip on how things "should" be. I am open to the journey and trust the flow of my life.'},
+        presence: { title: 'Prompt: Anchoring in the Now', text: 'What are three things I can see, hear, or feel right now? I bring my full attention to this moment and find my peace here.'},
+        readiness: { title: 'Prompt: Focusing on Myself', text: 'Instead of looking outward for my desire, I will look inward. What skill, habit, or mindset can I cultivate today to become the person who is ready for it?'}
+    };
 
-    const power9Data = [
-        { name: "Move Naturally", icon: "🚶", text: "Incorporate low-intensity movement throughout the day, like walking, gardening, and manual chores." },
-        { name: "Purpose", icon: "🎯", text: "Have a reason to wake up in the morning ('Ikigai'). This is linked to adding years to your life." },
-        { name: "Downshift", icon: "🧘", text: "Incorporate regular stress-reducing routines like napping, prayer, or social happy hours." },
-        { name: "80% Rule", icon: "🍽️", text: "Stop eating when you feel 80% full ('Hara hachi bu'). This gap prevents overeating and aids digestion." },
-        { name: "Plant Slant", icon: "🌱", text: "Make your diet predominantly plant-based, with beans as a cornerstone. Meat is eaten sparingly." },
-        { name: "Wine @ 5", icon: "🍷", text: "Moderate, regular consumption of alcohol (especially red wine) with food and friends." },
-        { name: "Belong", icon: "⛪", text: "Participate in a faith-based community, regardless of the denomination." },
-        { name: "Loved Ones First", icon: "👨‍👩‍👧‍👦", text: "Prioritize family, commit to a life partner, and invest in your children." },
-        { name: "Right Tribe", icon: "🧑‍🤝‍🧑", text: "Cultivate social circles that support and encourage healthy behaviors." },
-    ];
+    const trustItems = document.querySelectorAll('.trust-item');
+    if(trustItems.length > 0) {
+        const trustDisplay = document.getElementById('trust-display');
+        trustItems.forEach(item => {
+            item.addEventListener('click', function() {
+                trustItems.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                const type = this.dataset.trust;
+                const data = trustData[type];
+                trustDisplay.innerHTML = `<h5 class="font-bold text-lg mb-1 text-blue-900">${data.title}</h5><p class="text-blue-800">${data.text}</p>`;
+            });
+        });
+    }
 
     const distortionsGrid = document.getElementById('distortions-grid');
     if (distortionsGrid) {
@@ -450,8 +566,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const circadianBtns = document.querySelectorAll('.circadian-btn');
-    const circadianDisplay = document.getElementById('circadian-display');
     if (circadianBtns.length) {
+        const circadianDisplay = document.getElementById('circadian-display');
         function updateCircadian(time) {
             circadianDisplay.innerHTML = `<h4 class="text-xl font-bold text-gray-800 mb-2">${circadianData[time].title}</h4><p class="text-gray-600">${circadianData[time].text}</p>`;
             circadianBtns.forEach(b => {
@@ -459,10 +575,23 @@ document.addEventListener('DOMContentLoaded', function () {
                  b.classList.add('text-gray-500');
             });
             document.querySelector(`.circadian-btn[data-time="${time}"]`).classList.add('text-blue-600', 'font-semibold');
-            document.querySelector(`.circadian-btn[data-time="${time}"]`).classList.remove('text-gray-500');
         }
         circadianBtns.forEach(btn => btn.addEventListener('click', () => updateCircadian(btn.dataset.time)));
         updateCircadian('morning');
+    }
+
+    const workoutDayBtns = document.querySelectorAll('.workout-day-btn');
+    if(workoutDayBtns.length > 0) {
+        const workoutContents = document.querySelectorAll('.workout-day-content');
+        workoutDayBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                workoutDayBtns.forEach(b => b.classList.remove('active'));
+                workoutContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                const targetId = this.dataset.target;
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
     }
 
     const breathCircle = document.getElementById('breathing-circle');
@@ -476,36 +605,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 breathBtn.textContent = "Start Practice";
                 breathText.textContent = "Finished";
                 breathCircle.classList.remove('inhale');
-                breathCircle.classList.add('exhale');
                 return;
             }
             breathBtn.textContent = "Stop Practice";
             function doBreath() {
                 breathText.textContent = 'Inhale...';
-                breathCircle.classList.remove('exhale');
                 breathCircle.classList.add('inhale');
                 setTimeout(() => {
                     breathText.textContent = 'Exhale...';
                     breathCircle.classList.remove('inhale');
-                    breathCircle.classList.add('exhale');
                 }, 5500);
             }
             doBreath();
             breathInterval = setInterval(doBreath, 11000);
-        });
-    }
-    
-    const power9Grid = document.getElementById('power9-grid');
-    if (power9Grid) {
-        const power9Display = document.getElementById('power9-display');
-        power9Data.forEach(p => {
-            const btn = document.createElement('button');
-            btn.className = 'flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition';
-            btn.innerHTML = `<span class="text-3xl mb-2">${p.icon}</span><span class="text-sm font-semibold text-center">${p.name}</span>`;
-            btn.addEventListener('click', () => {
-                power9Display.innerHTML = `<div class="flex items-start"><span class="text-3xl mr-4">${p.icon}</span><div><h4 class="text-lg font-bold text-gray-800">${p.name}</h4><p class="text-gray-600">${p.text}</p></div></div>`;
-            });
-            power9Grid.appendChild(btn);
         });
     }
 
@@ -542,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const eqCtx = document.getElementById('eqChart');
     if (eqCtx) {
-        const eqChart = new Chart(eqCtx.getContext('2d'), {
+        new Chart(eqCtx.getContext('2d'), {
             type: 'radar',
             data: { labels: ['Self-Awareness', 'Self-Regulation', 'Motivation', 'Empathy', 'Social Skills'], datasets: [{ label: 'Emotional Intelligence', data: [8, 7, 9, 8, 7], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: 'rgb(54, 162, 235)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(54, 162, 235)' }] },
             options: { maintainAspectRatio: false, elements: { line: { tension: 0.1 } }, scales: { r: { suggestedMin: 0, suggestedMax: 10, pointLabels: { font: { size: 14 } } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { const descriptions = { 'Self-Awareness': 'Understanding your own emotions.', 'Self-Regulation': 'Managing your impulses and moods.', 'Motivation': 'Passion for goals beyond external rewards.', 'Empathy': 'Understanding others\' emotional makeup.', 'Social Skills': 'Building rapport and managing relationships.' }; return descriptions[context.label]; } } } } }
@@ -558,11 +670,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 paraCard.classList.remove('border-blue-500', 'border-green-500', 'bg-blue-50', 'bg-green-50');
                 zettelCard.classList.remove('border-blue-500', 'border-green-500', 'bg-blue-50', 'bg-green-50');
                 const pkmCase = btn.dataset.case;
-                if (pkmCase === 'project') {
-                    paraCard.classList.add('border-blue-500', 'bg-blue-50');
-                } else if (pkmCase === 'research') {
-                    zettelCard.classList.add('border-green-500', 'bg-green-50');
-                }
+                if (pkmCase === 'project') paraCard.classList.add('border-blue-500', 'bg-blue-50');
+                else if (pkmCase === 'research') zettelCard.classList.add('border-green-500', 'bg-green-50');
             });
         });
     }
@@ -586,29 +695,31 @@ document.addEventListener('DOMContentLoaded', function () {
         updateSummary();
     }
 
-    // Grooming Section Tabs
     const groomingTabBtns = document.querySelectorAll('.grooming-tab-btn');
-    const groomingTabContents = document.querySelectorAll('.grooming-tab-content');
-    groomingTabBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            groomingTabBtns.forEach(b => b.classList.remove('active'));
-            groomingTabContents.forEach(c => c.classList.remove('active'));
-            this.classList.add('active');
-            document.getElementById(this.dataset.target).classList.add('active');
+    if(groomingTabBtns.length > 0) {
+        const groomingTabContents = document.querySelectorAll('.grooming-tab-content');
+        groomingTabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                groomingTabBtns.forEach(b => b.classList.remove('active'));
+                groomingTabContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.target).classList.add('active');
+            });
         });
-    });
+    }
 
-    // Meal Plan Section Tabs
     const mealPlanBtns = document.querySelectorAll('.meal-plan-btn');
-    const mealPlanContents = document.querySelectorAll('.meal-plan-content');
-    mealPlanBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            mealPlanBtns.forEach(b => b.classList.remove('active'));
-            mealPlanContents.forEach(c => c.classList.remove('active'));
-            this.classList.add('active');
-            document.getElementById(this.dataset.target).classList.add('active');
+    if(mealPlanBtns.length > 0) {
+        const mealPlanContents = document.querySelectorAll('.meal-plan-content');
+        mealPlanBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                mealPlanBtns.forEach(b => b.classList.remove('active'));
+                mealPlanContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.target).classList.add('active');
+            });
         });
-    });
+    }
 });
 </script>
 </body>
