@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Life Blueprint 3.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Calm Neutral" - A palette using warm grays, soft beige, slate blue, and a gentle terracotta accent to create a calm, supportive, and harmonious feel. -->
+    <!-- Application Structure Plan: The SPA is structured around the core pillars of the blueprint. A fixed sidebar navigation allows users to instantly switch between these thematic sections without scrolling a long page. This non-linear, focused approach enhances usability by letting users dive into a specific area of interest, explore its interactive components, and absorb information without being overwhelmed. The goal is to transform the dense report into a modular, explorable dashboard for personal growth, where each section offers a distinct interactive learning experience. -->
+    <!-- Visualization & Content Choices: 
+        - Mindset/Cognitive Distortions: Report's Table 1 -> Goal: Organize/Inform -> Viz: Interactive flip-cards -> Interaction: Click to reveal details -> Justification: More engaging and tactile than a static table, encourages exploration. (HTML/CSS/JS).
+        - Health/Circadian Rhythm: Report's Table 4 -> Goal: Inform/Change -> Viz: Interactive 24-hour clock diagram -> Interaction: Click on time segments -> Justification: Visually represents time-based protocols more effectively than a list. (HTML/CSS/JS).
+        - Grooming/Meal Plan: Report's Text -> Goal: Organize/Inform -> Viz: Tabbed interface & tables -> Interaction: Click to switch views -> Justification: Breaks down extensive text into manageable, interactive chunks. (HTML/CSS/JS).
+        - Interpersonal/EQ: Report's Text -> Goal: Inform/Organize -> Viz: Radar Chart -> Interaction: Hover for tooltips -> Justification: Visually represents the multi-faceted nature of EQ. (Chart.js).
+        - Productivity/P.A.R.A. vs Zettelkasten: Report's Table 8 -> Goal: Compare/Guide -> Viz: Interactive comparison -> Interaction: Click a use-case to highlight best method -> Justification: Provides direct, actionable guidance based on user's goal. (HTML/CSS/JS).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8F7F4; color: #4A4A4A; }
+        .nav-item { transition: all 0.2s ease-in-out; }
+        .nav-item.active { background-color: #D6E4F0; color: #1E3A8A; font-weight: 600; }
+        .nav-item:not(.active):hover { background-color: #EAEAEA; }
+        .content-section, .grooming-tab-content, .meal-plan-content { display: none; }
+        .content-section.active, .grooming-tab-content.active, .meal-plan-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.is-flipped .card-inner { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; border-radius: 0.75rem; }
+        .card-front { background-color: #FFFFFF; border: 1px solid #E5E7EB; }
+        .card-back { background-color: #F0F9FF; border: 1px solid #D6E4F0; transform: rotateY(180deg); }
+        .breathing-circle { width: 150px; height: 150px; background-color: #BEE3F8; border-radius: 50%; transition: transform 5.5s ease-in-out; display: flex; justify-content: center; align-items: center; }
+        .breathing-circle.inhale { transform: scale(1.5); }
+        .breathing-circle.exhale { transform: scale(1); }
+        .chart-container { position: relative; width: 100%; max-width: 500px; margin: auto; height: 350px; max-height: 400px; }
+        .tab-btn.active { background-color: #3B82F6; color: white; }
+        .tab-btn { background-color: #E5E7EB; color: #374151; }
+        @media (max-width: 768px) { .chart-container { height: 300px; } }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <nav class="md:w-64 bg-white/80 backdrop-blur-sm border-r border-gray-200 p-4 md:p-6 flex-shrink-0">
+            <h1 class="text-2xl font-bold text-gray-800 mb-8">Life Blueprint</h1>
+            <ul class="space-y-2">
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg active" data-target="intro">
+                    <span class="mr-3">👋</span> Introduction</a>
+                </li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="mindset">
+                    <span class="mr-3">🧠</span> Mindset & Philosophy</a>
+                </li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="health">
+                    <span class="mr-3">❤️‍🩹</span> Health & Well-being</a>
+                </li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="grooming">
+                    <span class="mr-3">🥗</span> Grooming & Nutrition</a>
+                </li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="interpersonal">
+                    <span class="mr-3">🤝</span> Interpersonal Skills</a>
+                </li>
+                <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="productivity">
+                    <span class="mr-3">🚀</span> Productivity Mastery</a>
+                </li>
+                 <li><a href="#" class="nav-item flex items-center p-3 rounded-lg" data-target="synthesis">
+                    <span class="mr-3">✨</span> Synthesis & Action</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="flex-1 p-4 md:p-10 overflow-y-auto">
+
+            <div id="intro" class="content-section active">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">An Interactive Framework for Holistic Excellence</h2>
+                <p class="text-lg text-gray-600 mb-6">
+                    Welcome to your interactive Life Blueprint. This application translates the deep research from the "Optimizing Life Blueprint (Version 3.0)" report into an actionable, explorable experience. The goal is to move beyond passive reading and allow you to engage directly with the core principles for building a life of well-being and excellence.
+                </p>
+                <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-8">
+                    <p>Use the navigation on the left to explore each pillar of the blueprint. Each section contains interactive elements designed to help you understand, practice, and integrate these powerful concepts into your daily life.</p>
+                </div>
+                 <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">What is This?</h3>
+                        <p class="text-gray-600">A synthesis of evidence-based practices from psychology, neuroscience, and longevity research, designed to provide a holistic framework for personal growth.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">How to Use It?</h3>
+                        <p class="text-gray-600">Explore sections at your own pace. Engage with the interactive tools to deepen your understanding. Revisit regularly to reinforce learning and adapt the principles to your evolving life.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mindset" class="content-section">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Mindset & Philosophy</h2>
+                <p class="text-lg text-gray-600 mb-8">This section explores the mental frameworks that shape your reality. Learn to cultivate a resilient and purposeful mind by understanding and reframing your thoughts, discovering authentic purpose, and satisfying your core psychological needs.</p>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Your Mind is a Garden: Cognitive Reframing</h3>
+                <p class="text-gray-600 mb-6">Your thoughts are not facts. Unhelpful thought patterns, or "cognitive distortions," are like weeds in a garden. By identifying and reframing them, you can cultivate a more positive and realistic inner landscape. Click on a card to learn how to reframe a common distortion.</p>
+                <div id="distortions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Reclaiming Ikigai: Authentic Daily Purpose</h3>
+                <p class="text-gray-600 mb-6">The popular Western Venn diagram of Ikigai can create pressure. Authentic Japanese Ikigai is more accessible—it's about finding joy and purpose in everyday moments and small rituals, not necessarily a single, grand, monetizable passion.</p>
+                <div class="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm">
+                    <div>
+                        <h4 class="font-bold text-lg text-red-600 mb-2">Westernized Misconception</h4>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Intersection of 4 complex circles.</li>
+                            <li>Implies a single, grand purpose.</li>
+                            <li class="font-semibold">Explicitly requires being paid.</li>
+                            <li>Can create pressure and inadequacy.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-green-600 mb-2">Authentic Japanese Concept</h4>
+                         <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>"A reason to wake up in the morning."</li>
+                            <li class="font-semibold">Found in small, daily joys & rituals.</li>
+                            <li>Not tied to profession or money.</li>
+                            <li>Reduces stress and promotes contentment.</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Thrive with Self-Determination Theory (SDT)</h3>
+                <p class="text-gray-600 mb-6">SDT proposes three universal psychological needs essential for well-being and motivation. Hover over each need to see how to cultivate it.</p>
+                <div id="sdt-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <div id="health" class="content-section">
+                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Health & Well-being</h2>
+                <p class="text-lg text-gray-600 mb-8">This section provides evidence-based protocols to optimize your physical and mental vitality. Master your biology through circadian science, advanced breathing techniques, and proven longevity habits.</p>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Master Your Circadian Clock</h3>
+                <p class="text-gray-600 mb-6">Your body has an internal 24-hour clock that regulates energy, mood, and sleep. Aligning your daily habits with this rhythm is a powerful health intervention. Click on the time blocks below to see the key protocol for that period.</p>
+                <div class="w-full max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm">
+                     <div class="flex justify-around mb-4 border-b pb-2">
+                        <button class="circadian-btn font-semibold text-blue-600" data-time="morning">Morning</button>
+                        <button class="circadian-btn text-gray-500" data-time="afternoon">Afternoon</button>
+                        <button class="circadian-btn text-gray-500" data-time="evening">Evening</button>
+                        <button class="circadian-btn text-gray-500" data-time="sleep">Sleep</button>
+                    </div>
+                    <div id="circadian-display" class="text-center p-4 min-h-[150px]"></div>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">The Power of Coherent Breathing</h3>
+                <p class="text-gray-600 mb-6">Breathing at a rhythm of ~5.5 seconds in and 5.5 seconds out maximizes Heart Rate Variability (HRV), balancing your nervous system and promoting calm. Try it now with this visual pacer.</p>
+                <div class="flex flex-col items-center justify-center bg-white p-8 rounded-xl shadow-sm">
+                    <div id="breathing-circle" class="breathing-circle exhale">
+                        <span id="breathing-text" class="text-lg font-semibold text-gray-700">Ready?</span>
+                    </div>
+                    <button id="breathing-start-btn" class="mt-6 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Practice</button>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Longevity Habits from the Blue Zones</h3>
+                <p class="text-gray-600 mb-6">The world's longest-lived people don't run marathons; they live in environments that nurture healthy habits. Explore their "Power 9" principles by clicking the icons.</p>
+                <div id="power9-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+                <div id="power9-display" class="mt-4 bg-white p-6 rounded-xl shadow-sm min-h-[100px]">
+                    <p class="text-gray-600 text-center">Click an icon to learn more.</p>
+                </div>
+            </div>
+
+            <div id="grooming" class="content-section">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Grooming & Nutrition</h2>
+                <p class="text-lg text-gray-600 mb-8">This section covers the practical aspects of self-care, from presenting your best self to fueling your body optimally. True confidence comes from caring for yourself inside and out.</p>
+
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">The Complete Grooming & Hygiene Routine</h3>
+                <p class="text-gray-600 mb-6">A well-groomed man exudes confidence and self-respect. Use the tabs below to explore a comprehensive routine for presenting the best version of yourself.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="flex space-x-2 border-b mb-4">
+                        <button class="grooming-tab-btn tab-btn py-2 px-4 rounded-t-lg font-semibold active" data-target="skincare">Skincare</button>
+                        <button class="grooming-tab-btn tab-btn py-2 px-4 rounded-t-lg font-semibold" data-target="daily">Daily Routine</button>
+                        <button class="grooming-tab-btn tab-btn py-2 px-4 rounded-t-lg font-semibold" data-target="hygiene">Advanced Hygiene</button>
+                    </div>
+                    <div id="skincare" class="grooming-tab-content active">
+                        <h4 class="text-xl font-bold mb-3">1. Know Your Skin Type</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-6">
+                            <li><b>Normal:</b> Balanced, not too oily or dry.</li>
+                            <li><b>Oily:</b> Prone to shine and breakouts.</li>
+                            <li><b>Dry:</b> Often feels tight and may be flaky.</li>
+                            <li><b>Combination:</b> Oily in the T-zone (forehead, nose, chin) and dry elsewhere.</li>
+                            <li><b>Sensitive:</b> Easily irritated and prone to redness.</li>
+                        </ul>
+                        <h4 class="text-xl font-bold mb-3">2. The 4-Step Skincare Regimen</h4>
+                        <ol class="list-decimal list-inside space-y-2">
+                           <li><b>Cleanse (Morning & Night):</b> Use a gentle facial cleanser suited to your skin type.</li>
+                           <li><b>Exfoliate (1-2 Times a Week):</b> Use a gentle scrub or a chemical exfoliant to remove dead skin cells.</li>
+                           <li><b>Moisturize (Morning & Night):</b> A good moisturizer hydrates the skin, keeping it supple.</li>
+                           <li><b>Protect (Every Morning):</b> Sunscreen is non-negotiable. Use a broad-spectrum SPF of 30 or higher every day.</li>
+                        </ol>
+                    </div>
+                    <div id="daily" class="grooming-tab-content">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-xl font-bold mb-3">Morning (A.M.)</h4>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Cleanse Face</li>
+                                    <li>Exfoliate Body (2-3x a week)</li>
+                                    <li>Moisturize Face & Body</li>
+                                    <li>Apply SPF 30+ Sunscreen</li>
+                                    <li>Apply Deodorant</li>
+                                    <li>Style Hair</li>
+                                    <li>Apply Lip Balm with SPF</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold mb-3">Evening (P.M.)</h4>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Cleanse Face (Remove grime & sunscreen)</li>
+                                    <li>Treat (Optional: beard roller, etc.)</li>
+                                    <li>Moisturize</li>
+                                    <li>Apply Hydrating Lip Balm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="hygiene" class="grooming-tab-content">
+                        <h4 class="text-xl font-bold mb-3">Advanced Hygiene Habits</h4>
+                        <ul class="list-disc list-inside space-y-3">
+                            <li><b>Oral Hygiene:</b> Brush 2x a day, floss daily, use a tongue scraper. See a dentist regularly.</li>
+                            <li><b>Hair & Body:</b> Wash hair 2-3x a week. Pluck stray eyebrow hairs. Trim nose/ear hair. Shave with the grain using quality cream.</li>
+                            <li><b>Hand & Nail Care:</b> Keep nails neatly trimmed and clean. Moisturize hands to prevent cracking.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Budget Bodybuilding Meal Plan (20:4 IF)</h3>
+                <p class="text-gray-600 mb-6">This plan is optimized for a student budget in Germany (shopping at Aldi Süd & Kaufland). Use the buttons to switch between weekly plans.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <h4 class="text-xl font-bold mb-3">Budget Shopping List</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 mb-6">
+                        <li class="font-semibold">Proteins: <span class="font-normal">Magerquark, Eggs, Chicken, Tuna, Lentils, Cottage Cheese.</span></li>
+                        <li class="font-semibold">Carbs: <span class="font-normal">Rice, Oats, Potatoes, Whole-wheat bread.</span></li>
+                        <li class="font-semibold">Veggies/Fruits: <span class="font-normal">Frozen mixes, Onions, Garlic, Apples, Bananas.</span></li>
+                    </ul>
+                    <div class="flex space-x-2 border-b mb-4">
+                        <button class="meal-plan-btn tab-btn py-2 px-4 rounded-t-lg font-semibold active" data-target="week1">Week 1</button>
+                        <button class="meal-plan-btn tab-btn py-2 px-4 rounded-t-lg font-semibold" data-target="week2">Week 2</button>
+                    </div>
+                    <div id="week1" class="meal-plan-content active overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-2">Day</th>
+                                    <th class="p-2">Meal 1 (4:00 PM)</th>
+                                    <th class="p-2">Meal 2 (7:00 PM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Monday</td> <td class="p-2">250g quark, berries, oats.</td> <td class="p-2">200g chicken, broccoli, onions, rice.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Tuesday</td> <td class="p-2">Tuna salad toast.</td> <td class="p-2">Lentil dal with 2 hard-boiled eggs.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Wednesday</td> <td class="p-2">Leftover chicken/rice.</td> <td class="p-2">Potato & quark casserole.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Thursday</td> <td class="p-2">Scrambled eggs with spinach.</td> <td class="p-2">Leftover lentil dal.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Friday</td> <td class="p-2">Quark with banana.</td> <td class="p-2">Quick chicken wraps.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Saturday</td> <td class="p-2">Tuna salad toast.</td> <td class="p-2">"Farmer's Breakfast" (Fried potatoes/onions/eggs).</td> </tr>
+                                <tr> <td class="p-2 font-semibold">Sunday</td> <td class="p-2">Quark bowl.</td> <td class="p-2">Meal prep: Fresh chicken with rice/beans.</td> </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                     <div id="week2" class="meal-plan-content overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-2">Day</th>
+                                    <th class="p-2">Meal 1 (4:00 PM)</th>
+                                    <th class="p-2">Meal 2 (7:00 PM)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Monday</td> <td class="p-2">Chickpea salad toast.</td> <td class="p-2">Simple chicken curry with rice.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Tuesday</td> <td class="p-2">Scrambled eggs with peas.</td> <td class="p-2">Tuna pasta bake.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Wednesday</td> <td class="p-2">Leftover chicken curry.</td> <td class="p-2">Jacket potatoes with seasoned quark.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Thursday</td> <td class="p-2">Quark with apple/cinnamon.</td> <td class="p-2">Leftover tuna pasta bake.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Friday</td> <td class="p-2">Lentil soup.</td> <td class="p-2">Ground meat & rice skillet.</td> </tr>
+                                <tr class="border-b"> <td class="p-2 font-semibold">Saturday</td> <td class="p-2">Egg muffins (pre-baked).</td> <td class="p-2">DIY Kebab Plate (Chicken, salad, quark sauce).</td> </tr>
+                                <tr> <td class="p-2 font-semibold">Sunday</td> <td class="p-2">Leftovers.</td> <td class="p-2">Chili sin Carne (meatless).</td> </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="interpersonal" class="content-section">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Interpersonal Excellence</h2>
+                <p class="text-lg text-gray-600 mb-8">This section focuses on mastering connection and influence. Learn to build stronger, more authentic relationships by integrating timeless principles of influence with modern frameworks of empathy and emotional intelligence.</p>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">The NVC Conversation Builder</h3>
+                <p class="text-gray-600 mb-6">Nonviolent Communication (NVC) transforms conflict into connection. Use this interactive tool to see how to reframe a judgmental statement into a clear, compassionate one using the four steps of NVC. Click "Next Step" to build the conversation.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="mb-4">
+                        <p class="font-semibold text-red-600">Ineffective Communication:</p>
+                        <p class="italic text-gray-700">"You're always late for our meetings. It's so disrespectful."</p>
+                    </div>
+                    <hr class="my-4">
+                    <div id="nvc-steps-container" class="space-y-3"></div>
+                    <button id="nvc-next-btn" class="mt-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Building</button>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">The 5 Components of Emotional Intelligence (EQ)</h3>
+                <p class="text-gray-600 mb-6">EQ is the ability to understand and manage your own emotions, and those of the people around you. It's a critical skill for life success. This chart visualizes the five core components. Hover over each point for a description.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div class="chart-container">
+                        <canvas id="eqChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="productivity" class="content-section">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Productivity & Information Mastery</h2>
+                <p class="text-lg text-gray-600 mb-8">This section provides a system for managing knowledge and turning ideas into action. Learn how to capture, organize, distill, and express information effectively to reduce cognitive load and supercharge your creative output.</p>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">P.A.R.A. or Zettelkasten?</h3>
+                <p class="text-gray-600 mb-6">Different knowledge management systems are suited for different tasks. P.A.R.A. is for action-oriented project management, while Zettelkasten is for idea generation and research. Click a use case below to see which system is a better fit.</p>
+                <div class="flex justify-center gap-4 mb-4">
+                    <button class="pkm-btn bg-blue-100 text-blue-800 p-2 rounded-lg" data-case="project">Manage a Project</button>
+                    <button class="pkm-btn bg-green-100 text-green-800 p-2 rounded-lg" data-case="research">Write a Research Paper</button>
+                    <button class="pkm-btn bg-gray-200 text-gray-800 p-2 rounded-lg" data-case="reset">Reset</button>
+                </div>
+                <div id="pkm-comparison" class="grid md:grid-cols-2 gap-6 transition-all duration-300">
+                    <div id="para-card" class="bg-white p-6 rounded-xl shadow-sm border-2 border-transparent">
+                        <h4 class="font-bold text-lg text-blue-700 mb-2">P.A.R.A. System</h4>
+                        <p class="font-semibold mb-2">Best for: Actionability & Productivity</p>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                           <li>Organizes all digital info by actionability.</li>
+                           <li>Top-down, hierarchical structure.</li>
+                           <li>Keeps active projects easily accessible.</li>
+                           <li>Manages files, notes, and tasks.</li>
+                        </ul>
+                    </div>
+                    <div id="zettel-card" class="bg-white p-6 rounded-xl shadow-sm border-2 border-transparent">
+                         <h4 class="font-bold text-lg text-green-700 mb-2">Zettelkasten Method</h4>
+                         <p class="font-semibold mb-2">Best for: Idea Generation & Learning</p>
+                         <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Develops a web of interconnected ideas.</li>
+                            <li>Bottom-up, networked structure.</li>
+                            <li>Fosters unexpected connections.</li>
+                            <li>Ideal for research and complex writing.</li>
+                        </ul>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">The Art of Progressive Summarization</h3>
+                <p class="text-gray-600 mb-6">Don't just collect information, distill it. Progressive summarization is a multi-layered technique to find the essence of your notes, enhancing learning and retention. Click "Next Layer" to see it in action.</p>
+                <div class="bg-white p-6 rounded-xl shadow-sm">
+                    <div id="summarization-display" class="prose max-w-none text-gray-700 mb-4 min-h-[200px]"></div>
+                    <button id="summarization-next-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Summarizing</button>
+                </div>
+            </div>
+            
+            <div id="synthesis" class="content-section">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Synthesis & Action</h2>
+                <p class="text-lg text-gray-600 mb-8">This final section integrates the blueprint's components, emphasizing the "meta-skills" that amplify all other practices. Learn how to weave mindfulness into every action, balance ambition with well-being, and commit to this blueprint as an evolving guide for your life.</p>
+                <div class="space-y-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🌿 Integrating Mindfulness Everywhere</h3>
+                        <p class="text-gray-600 mb-4">Mindfulness is not just a separate practice; it's a foundational skill that enhances every aspect of this blueprint. It is paying attention to the present moment without judgment.</p>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                            <li><b>In Mindset:</b> Mindful awareness of thoughts is the first step to cognitive reframing.</li>
+                            <li><b>In Health:</b> Mindful eating helps you recognize the "80% full" signal. Mindful breathing calms the nervous system.</li>
+                            <li><b>In Relationships:</b> Mindful listening—being fully present—is the key to empathy and genuine connection.</li>
+                            <li><b>In Productivity:</b> Mindful work (single-tasking) improves focus and the quality of your output.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">⚖️ The Art of Ambitious Well-being</h3>
+                        <p class="text-gray-600 mb-4">Sustainable success is built on a foundation of well-being, not at its expense. The goal is to integrate ambition and health, not to sacrifice one for the other.</p>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                           <li><b>Set Sustainable Goals:</b> Break large ambitions into manageable steps to avoid burnout.</li>
+                           <li><b>Prioritize Self-Care:</b> View sleep, nutrition, and rest as essential investments in your capacity for high performance.</li>
+                           <li><b>Establish Boundaries:</b> Protect your time and energy to prevent overextension.</li>
+                           <li><b>Nurture Support Networks:</b> Strong relationships provide the resilience needed to pursue ambitious goals.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-white p-6 rounded-xl shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">🔄 Your Evolving Blueprint</h3>
+                        <p class="text-gray-600 mb-4">This document is not a static set of rules but a dynamic, living guide. Your life will change, and so should your blueprint.</p>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2">
+                           <li><b>Review and Adapt:</b> Schedule regular reviews (e.g., quarterly) to ensure the blueprint aligns with your current goals and values.</li>
+                           <li><b>Embrace Lifelong Learning:</b> Stay open to new research and personal insights to refine your approach.</li>
+                           <li><b>Practice Self-Compassion:</b> The goal is consistent progress, not flawless perfection. Be flexible and kind to yourself on this journey.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const navItems = document.querySelectorAll('.nav-item');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            navItems.forEach(i => i.classList.remove('active'));
+            contentSections.forEach(s => s.classList.remove('active'));
+
+            this.classList.add('active');
+            const targetId = this.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    const distortionsData = [
+        { name: "All-or-Nothing", weed: "If I don't get this promotion, I'm a total failure.", flower: "Not getting this is disappointing, but it doesn't negate my past successes or future opportunities." },
+        { name: "Overgeneralization", weed: "I failed this test, so I'll probably fail all of them.", flower: "I can learn from how I prepared for this test and do better on the next one." },
+        { name: "Mental Filter", weed: "I got one critical comment on my presentation.", flower: "While one comment was critical, I also received positive feedback on several key aspects." },
+        { name: "Catastrophizing", weed: "If I make a mistake in this report, it will be a complete catastrophe.", flower: "Mistakes happen. If I make one, I can address it and learn from it. It's not a disaster." },
+        { name: "Mind Reading", weed: "They probably think I'm incompetent for asking that question.", flower: "I can't know what they're thinking. I should focus on my own actions and learning." },
+        { name: "Labeling", weed: "I'm such an idiot for forgetting that appointment.", flower: "I made a mistake, but that doesn't define me. I am capable and can be more organized." }
+    ];
+
+    const sdtData = [
+        { name: 'Autonomy', icon: '🕊️', description: 'The need to feel a sense of choice and psychological liberty. Cultivate it by aligning actions with personal values and setting self-endorsed goals.' },
+        { name: 'Competence', icon: '🏆', description: 'The need to feel effective and experience mastery. Nurture it through constructive feedback and engaging in optimally challenging tasks.' },
+        { name: 'Relatedness', icon: '❤️', description: 'The need to feel connected to others and belong. Enhance it by investing in high-quality, authentic relationships and community.' }
+    ];
+    
+    const circadianData = {
+        morning: { title: '☀️ Morning: Anchor Your Day', text: 'View direct sunlight for 5-10 mins (sunny) or 15-20 mins (overcast) within an hour of waking. This sets your master clock, triggers healthy cortisol release, and times your evening melatonin production. Delay caffeine for 90-120 mins after waking.' },
+        afternoon: { title: '🔄 Afternoon: Manage Energy', text: 'If you feel an energy dip, consider a short walk, hydration, or a brief nap (under 30 mins). Avoid caffeine late in the day, as its quarter-life can extend up to 12 hours, disrupting deep sleep.' },
+        evening: { title: '🌙 Evening: Prepare for Rest', text: 'View sunset light if possible to signal evening to your brain. Crucially, dim indoor lights and avoid bright blue light from screens 2-3 hours before bed. This prevents the suppression of melatonin, the hormone that helps you sleep.' },
+        sleep: { title: '😴 Sleep: Optimize Environment', text: 'Maintain a consistent sleep-wake schedule, even on weekends. Keep your bedroom as dark and cool as possible. A drop in core body temperature is a natural cue for sleep onset.' }
+    };
+
+    const power9Data = [
+        { name: "Move Naturally", icon: "🚶", text: "Incorporate low-intensity movement throughout the day, like walking, gardening, and manual chores." },
+        { name: "Purpose", icon: "🎯", text: "Have a reason to wake up in the morning ('Ikigai'). This is linked to adding years to your life." },
+        { name: "Downshift", icon: "🧘", text: "Incorporate regular stress-reducing routines like napping, prayer, or social happy hours." },
+        { name: "80% Rule", icon: "🍽️", text: "Stop eating when you feel 80% full ('Hara hachi bu'). This gap prevents overeating and aids digestion." },
+        { name: "Plant Slant", icon: "🌱", text: "Make your diet predominantly plant-based, with beans as a cornerstone. Meat is eaten sparingly." },
+        { name: "Wine @ 5", icon: "🍷", text: "Moderate, regular consumption of alcohol (especially red wine) with food and friends." },
+        { name: "Belong", icon: "⛪", text: "Participate in a faith-based community, regardless of the denomination." },
+        { name: "Loved Ones First", icon: "👨‍👩‍👧‍👦", text: "Prioritize family, commit to a life partner, and invest in your children." },
+        { name: "Right Tribe", icon: "🧑‍🤝‍🧑", text: "Cultivate social circles that support and encourage healthy behaviors." },
+    ];
+
+    const distortionsGrid = document.getElementById('distortions-grid');
+    if (distortionsGrid) {
+        distortionsData.forEach(d => {
+            const card = document.createElement('div');
+            card.className = 'card h-48 cursor-pointer';
+            card.innerHTML = `<div class="card-inner"><div class="card-face card-front"><h4 class="text-xl font-semibold text-gray-800">${d.name}</h4><p class="text-sm text-gray-500 mt-2">(Click to reframe)</p></div><div class="card-face card-back"><p class="text-sm italic text-red-600 mb-2">"${d.weed}"</p><p class="text-sm font-semibold text-green-700">"${d.flower}"</p></div></div>`;
+            card.addEventListener('click', () => card.classList.toggle('is-flipped'));
+            distortionsGrid.appendChild(card);
+        });
+    }
+
+    const sdtGrid = document.getElementById('sdt-grid');
+    if (sdtGrid) {
+        sdtData.forEach(need => {
+            const div = document.createElement('div');
+            div.className = 'bg-white p-6 rounded-xl shadow-sm relative group';
+            div.innerHTML = `<div class="text-4xl mb-3">${need.icon}</div><h4 class="text-xl font-bold text-gray-800">${need.name}</h4><div class="absolute inset-0 bg-black bg-opacity-70 text-white p-4 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"><p class="text-center text-sm">${need.description}</p></div>`;
+            sdtGrid.appendChild(div);
+        });
+    }
+
+    const circadianBtns = document.querySelectorAll('.circadian-btn');
+    const circadianDisplay = document.getElementById('circadian-display');
+    if (circadianBtns.length) {
+        function updateCircadian(time) {
+            circadianDisplay.innerHTML = `<h4 class="text-xl font-bold text-gray-800 mb-2">${circadianData[time].title}</h4><p class="text-gray-600">${circadianData[time].text}</p>`;
+            circadianBtns.forEach(b => {
+                 b.classList.remove('text-blue-600', 'font-semibold');
+                 b.classList.add('text-gray-500');
+            });
+            document.querySelector(`.circadian-btn[data-time="${time}"]`).classList.add('text-blue-600', 'font-semibold');
+            document.querySelector(`.circadian-btn[data-time="${time}"]`).classList.remove('text-gray-500');
+        }
+        circadianBtns.forEach(btn => btn.addEventListener('click', () => updateCircadian(btn.dataset.time)));
+        updateCircadian('morning');
+    }
+
+    const breathCircle = document.getElementById('breathing-circle');
+    if (breathCircle) {
+        const breathText = document.getElementById('breathing-text');
+        const breathBtn = document.getElementById('breathing-start-btn');
+        let breathInterval;
+        breathBtn.addEventListener('click', () => {
+            if(breathBtn.textContent === "Stop Practice"){
+                clearInterval(breathInterval);
+                breathBtn.textContent = "Start Practice";
+                breathText.textContent = "Finished";
+                breathCircle.classList.remove('inhale');
+                breathCircle.classList.add('exhale');
+                return;
+            }
+            breathBtn.textContent = "Stop Practice";
+            function doBreath() {
+                breathText.textContent = 'Inhale...';
+                breathCircle.classList.remove('exhale');
+                breathCircle.classList.add('inhale');
+                setTimeout(() => {
+                    breathText.textContent = 'Exhale...';
+                    breathCircle.classList.remove('inhale');
+                    breathCircle.classList.add('exhale');
+                }, 5500);
+            }
+            doBreath();
+            breathInterval = setInterval(doBreath, 11000);
+        });
+    }
+    
+    const power9Grid = document.getElementById('power9-grid');
+    if (power9Grid) {
+        const power9Display = document.getElementById('power9-display');
+        power9Data.forEach(p => {
+            const btn = document.createElement('button');
+            btn.className = 'flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition';
+            btn.innerHTML = `<span class="text-3xl mb-2">${p.icon}</span><span class="text-sm font-semibold text-center">${p.name}</span>`;
+            btn.addEventListener('click', () => {
+                power9Display.innerHTML = `<div class="flex items-start"><span class="text-3xl mr-4">${p.icon}</span><div><h4 class="text-lg font-bold text-gray-800">${p.name}</h4><p class="text-gray-600">${p.text}</p></div></div>`;
+            });
+            power9Grid.appendChild(btn);
+        });
+    }
+
+    const nvcContainer = document.getElementById('nvc-steps-container');
+    if (nvcContainer) {
+        const nvcNextBtn = document.getElementById('nvc-next-btn');
+        const nvcSteps = [
+            { title: '1. Observation (Just the facts)', text: '"When I see that our meeting was scheduled for 9:00 AM and you arrived at 9:15..."' },
+            { title: '2. Feeling (Own your emotion)', text: '"...I feel frustrated..."' },
+            { title: '3. Need (Identify the universal need)', text: '"...because I have a need for our team to be efficient and start on time."' },
+            { title: '4. Request (Clear, positive, actionable)', text: '"Would you be willing to make an effort to arrive by 9:00 AM for future meetings?"' }
+        ];
+        let currentNvcStep = 0;
+        nvcNextBtn.addEventListener('click', () => {
+            if(currentNvcStep >= nvcSteps.length) {
+                nvcContainer.innerHTML = '';
+                currentNvcStep = 0;
+                nvcNextBtn.textContent = "Start Building";
+                return;
+            }
+            if (currentNvcStep === 0) {
+                 nvcNextBtn.textContent = "Next Step";
+            }
+            const stepData = nvcSteps[currentNvcStep];
+            const stepEl = document.createElement('div');
+            stepEl.innerHTML = `<p class="font-semibold text-gray-800">${stepData.title}:</p><p class="italic text-gray-700">${stepData.text}</p>`;
+            nvcContainer.appendChild(stepEl);
+            currentNvcStep++;
+            if(currentNvcStep >= nvcSteps.length) {
+                nvcNextBtn.textContent = "Reset";
+            }
+        });
+    }
+
+    const eqCtx = document.getElementById('eqChart');
+    if (eqCtx) {
+        const eqChart = new Chart(eqCtx.getContext('2d'), {
+            type: 'radar',
+            data: { labels: ['Self-Awareness', 'Self-Regulation', 'Motivation', 'Empathy', 'Social Skills'], datasets: [{ label: 'Emotional Intelligence', data: [8, 7, 9, 8, 7], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: 'rgb(54, 162, 235)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(54, 162, 235)' }] },
+            options: { maintainAspectRatio: false, elements: { line: { tension: 0.1 } }, scales: { r: { suggestedMin: 0, suggestedMax: 10, pointLabels: { font: { size: 14 } } } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { const descriptions = { 'Self-Awareness': 'Understanding your own emotions.', 'Self-Regulation': 'Managing your impulses and moods.', 'Motivation': 'Passion for goals beyond external rewards.', 'Empathy': 'Understanding others\' emotional makeup.', 'Social Skills': 'Building rapport and managing relationships.' }; return descriptions[context.label]; } } } } }
+        });
+    }
+
+    const pkmBtns = document.querySelectorAll('.pkm-btn');
+    if (pkmBtns.length) {
+        const paraCard = document.getElementById('para-card');
+        const zettelCard = document.getElementById('zettel-card');
+        pkmBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                paraCard.classList.remove('border-blue-500', 'border-green-500', 'bg-blue-50', 'bg-green-50');
+                zettelCard.classList.remove('border-blue-500', 'border-green-500', 'bg-blue-50', 'bg-green-50');
+                const pkmCase = btn.dataset.case;
+                if (pkmCase === 'project') {
+                    paraCard.classList.add('border-blue-500', 'bg-blue-50');
+                } else if (pkmCase === 'research') {
+                    zettelCard.classList.add('border-green-500', 'bg-green-50');
+                }
+            });
+        });
+    }
+
+    const summaryDisplay = document.getElementById('summarization-display');
+    if(summaryDisplay) {
+        const summaryBtn = document.getElementById('summarization-next-btn');
+        const summaryLayers = [
+            { text: `The C.O.D.E. method (Capture, Organize, Distill, Express) provides a sound structure. PKM systems are designed to enhance organizational efficiency, learning, and decision-making by providing a structured approach to how individuals collect, process, store, and retrieve information. The act of engaging with information—such as summarizing and linking notes—actively reinforces learning and improves long-term memory retention. A well-implemented PKM system can also reduce cognitive overload by offloading information, freeing up mental resources for higher-level cognitive processes like critical thinking, problem-solving, and creativity.` },
+            { text: `The C.O.D.E. method (Capture, Organize, Distill, Express) provides a sound structure. <b>PKM systems are designed to enhance organizational efficiency, learning, and decision-making</b> by providing a structured approach to how individuals collect, process, store, and retrieve information. The act of <b>engaging with information—such as summarizing and linking notes—actively reinforces learning and improves long-term memory retention</b>. A well-implemented PKM system can also <b>reduce cognitive overload by offloading information</b>, freeing up mental resources for higher-level cognitive processes like critical thinking, problem-solving, and creativity.` },
+            { text: `The C.O.D.E. method (Capture, Organize, Distill, Express) provides a sound structure. <b><mark>PKM systems are designed to enhance organizational efficiency, learning, and decision-making</mark></b> by providing a structured approach to how individuals collect, process, store, and retrieve information. The act of <b><mark>engaging with information—such as summarizing and linking notes—actively reinforces learning and improves long-term memory retention</mark></b>. A well-implemented PKM system can also <b><mark>reduce cognitive overload by offloading information</mark></b>, freeing up mental resources for higher-level cognitive processes like critical thinking, problem-solving, and creativity.` },
+            { text: `<div class="p-3 bg-yellow-100 border-l-4 border-yellow-400 rounded-r-lg"><h5 class="font-bold">My Summary</h5><p>Personal Knowledge Management (PKM) systems enhance learning and reduce cognitive load. Engaging with information by summarizing it reinforces memory and frees up mental space for creative thinking.</p></div><br>` + `The C.O.D.E. method (Capture, Organize, Distill, Express) provides a sound structure. <b><mark>PKM systems are designed to enhance organizational efficiency, learning, and decision-making</mark></b> by providing a structured approach to how individuals collect, process, store, and retrieve information. The act of <b><mark>engaging with information—such as summarizing and linking notes—actively reinforces learning and improves long-term memory retention</mark></b>. A well-implemented PKM system can also <b><mark>reduce cognitive overload by offloading information</mark></b>, freeing up mental resources for higher-level cognitive processes like critical thinking, problem-solving, and creativity.` }
+        ];
+        let currentSummaryLayer = -1;
+        function updateSummary() {
+            if(currentSummaryLayer >= summaryLayers.length) { currentSummaryLayer = -1; summaryDisplay.innerHTML = ""; summaryBtn.textContent = "Start Summarizing"; return; }
+            if(currentSummaryLayer === -1){ currentSummaryLayer++; summaryBtn.textContent = "Next Layer (Bold)"; } else if (currentSummaryLayer === 0) { summaryBtn.textContent = "Next Layer (Highlight)"; currentSummaryLayer++; } else if (currentSummaryLayer === 1) { summaryBtn.textContent = "Next Layer (Summarize)"; currentSummaryLayer++; } else if (currentSummaryLayer === 2) { summaryBtn.textContent = "Reset"; currentSummaryLayer++; }
+            summaryDisplay.innerHTML = summaryLayers[currentSummaryLayer].text;
+        }
+        summaryBtn.addEventListener('click', updateSummary);
+        updateSummary();
+    }
+
+    // Grooming Section Tabs
+    const groomingTabBtns = document.querySelectorAll('.grooming-tab-btn');
+    const groomingTabContents = document.querySelectorAll('.grooming-tab-content');
+    groomingTabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            groomingTabBtns.forEach(b => b.classList.remove('active'));
+            groomingTabContents.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.target).classList.add('active');
+        });
+    });
+
+    // Meal Plan Section Tabs
+    const mealPlanBtns = document.querySelectorAll('.meal-plan-btn');
+    const mealPlanContents = document.querySelectorAll('.meal-plan-content');
+    mealPlanBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            mealPlanBtns.forEach(b => b.classList.remove('active'));
+            mealPlanContents.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.target).classList.add('active');
+        });
+    });
+});
+</script>
+</body>
+</html>
