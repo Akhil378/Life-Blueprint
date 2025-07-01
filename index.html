@@ -10,13 +10,14 @@
     <!-- Chosen Palette: "Calm Neutral" - A palette using warm grays, soft beige, slate blue, and a gentle terracotta accent to create a calm, supportive, and harmonious feel. -->
     <!-- Application Structure Plan: The SPA is structured around the core pillars of the blueprint. A fixed sidebar navigation allows users to instantly switch between these thematic sections without scrolling a long page. This non-linear, focused approach enhances usability by letting users dive into a specific area of interest, explore its interactive components, and absorb information without being overwhelmed. The goal is to transform the dense report into a modular, explorable dashboard for personal growth, where each section offers a distinct interactive learning experience. -->
     <!-- Visualization & Content Choices: 
-        - Mindset/Trusting the Flow: Video Content -> Goal: Guide Self-Reflection -> Viz: Interactive Comparison -> Interaction: Click a mindset to see a reflective prompt -> Justification: Translates the video's core concept into an actionable tool for cultivating peace and patience. (HTML/CSS/JS).
-        - Mindset/Cognitive Distortions: Report's Table 1 -> Goal: Organize/Inform -> Viz: Interactive flip-cards -> Interaction: Click to reveal details -> Justification: More engaging and tactile than a static table, encourages exploration. (HTML/CSS/JS).
-        - Health/Workout Plan: Text -> Goal: Organize/Guide -> Viz: Interactive Weekly Schedule -> Interaction: Click day to show workout -> Justification: Breaks down a long text-based plan into a manageable, interactive format, improving usability. (HTML/CSS/JS).
-        - Health/Circadian Rhythm: Report's Table 4 -> Goal: Inform/Change -> Viz: Interactive 24-hour clock diagram -> Interaction: Click on time segments -> Justification: Visually represents time-based protocols more effectively than a list. (HTML/CSS/JS).
-        - Grooming/Meal Plan: Report's Text -> Goal: Organize/Inform -> Viz: Tabbed interface & tables -> Interaction: Click to switch views -> Justification: Breaks down extensive text into manageable, interactive chunks. (HTML/CSS/JS).
-        - Interpersonal/EQ: Report's Text -> Goal: Inform/Organize -> Viz: Radar Chart -> Interaction: Hover for tooltips -> Justification: Visually represents the multi-faceted nature of EQ. (Chart.js).
-        - Productivity/P.A.R.A. vs Zettelkasten: Report's Table 8 -> Goal: Compare/Guide -> Viz: Interactive comparison -> Interaction: Click a use-case to highlight best method -> Justification: Provides direct, actionable guidance based on user's goal. (HTML/CSS/JS).
+         - Mindset/The Assumption Architect: Video Content -> Goal: Guide Action -> Viz: Interactive 3-Phase Guide -> Interaction: Click a phase to see detailed steps -> Justification: Translates the video's 12 principles into a more digestible, actionable 3-step framework. (HTML/CSS/JS).
+         - Mindset/Trusting the Flow: Video Content -> Goal: Guide Self-Reflection -> Viz: Interactive Comparison -> Interaction: Click a mindset to see a reflective prompt -> Justification: Translates a core concept into an actionable tool for cultivating peace and patience. (HTML/CSS/JS).
+         - Mindset/Cognitive Distortions: Report's Table 1 -> Goal: Organize/Inform -> Viz: Interactive flip-cards -> Interaction: Click to reveal details -> Justification: More engaging and tactile than a static table, encourages exploration. (HTML/CSS/JS).
+         - Health/Workout Plan: Text -> Goal: Organize/Guide -> Viz: Interactive Weekly Schedule -> Interaction: Click day to show workout -> Justification: Breaks down a long text-based plan into a manageable, interactive format, improving usability. (HTML/CSS/JS).
+         - Health/Circadian Rhythm: Report's Table 4 -> Goal: Inform/Change -> Viz: Interactive 24-hour clock diagram -> Interaction: Click on time segments -> Justification: Visually represents time-based protocols more effectively than a list. (HTML/CSS/JS).
+         - Grooming/Meal Plan: Report's Text -> Goal: Organize/Inform -> Viz: Tabbed interface & tables -> Interaction: Click to switch views -> Justification: Breaks down extensive text into manageable, interactive chunks. (HTML/CSS/JS).
+         - Interpersonal/EQ: Report's Text -> Goal: Inform/Organize -> Viz: Radar Chart -> Interaction: Hover for tooltips -> Justification: Visually represents the multi-faceted nature of EQ. (Chart.js).
+         - Productivity/P.A.R.A. vs Zettelkasten: Report's Table 8 -> Goal: Compare/Guide -> Viz: Interactive comparison -> Interaction: Click a use-case to highlight best method -> Justification: Provides direct, actionable guidance based on user's goal. (HTML/CSS/JS).
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -39,7 +40,7 @@
         .chart-container { position: relative; width: 100%; max-width: 500px; margin: auto; height: 350px; max-height: 400px; }
         .tab-btn.active { background-color: #3B82F6; color: white; }
         .tab-btn { background-color: #E5E7EB; color: #374151; }
-        .trust-item.selected { background-color: #E0F2FE; }
+        .trust-item.selected, .phase-btn.selected { background-color: #E0F2FE; border-color: #3B82F6; }
         .workout-day-btn.active { background-color: #1E3A8A; color: white; }
         @media (max-width: 768px) { .chart-container { height: 300px; } }
     </style>
@@ -98,6 +99,25 @@
             <div id="mindset" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Mindset & Philosophy</h2>
                 <p class="text-lg text-gray-600 mb-8">This section explores the mental frameworks that shape your reality. Learn to cultivate a resilient and purposeful mind by understanding and reframing your thoughts, discovering authentic purpose, and satisfying your core psychological needs.</p>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Assumption Architect</h3>
+                    <p class="text-gray-600 mb-6">Based on the teachings of Neville Goddard, the Law of Assumption states that by assuming the feeling of your wish already being fulfilled, you can shape your reality. This is not passive wishing, but an active, conscious process. Use this guide to architect your desired reality.</p>
+                    <div class="flex flex-col md:flex-row gap-4 mb-4">
+                         <button class="phase-btn flex-1 p-4 bg-gray-50 rounded-lg text-center border-2 border-transparent" data-phase="define">
+                            <h4 class="font-bold text-lg text-gray-700">1. Define</h4>
+                        </button>
+                        <button class="phase-btn flex-1 p-4 bg-gray-50 rounded-lg text-center border-2 border-transparent" data-phase="embody">
+                            <h4 class="font-bold text-lg text-gray-700">2. Embody</h4>
+                        </button>
+                        <button class="phase-btn flex-1 p-4 bg-gray-50 rounded-lg text-center border-2 border-transparent" data-phase="sustain">
+                            <h4 class="font-bold text-lg text-gray-700">3. Sustain</h4>
+                        </button>
+                    </div>
+                    <div id="phase-display" class="p-4 bg-blue-50 border-t-4 border-blue-500 rounded-b-lg min-h-[140px]">
+                        <p class="text-blue-800 text-center">Click a phase to begin building your reality.</p>
+                    </div>
+                </div>
                 
                 <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">Trusting the Flow</h3>
@@ -128,33 +148,6 @@
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Your Mind is a Garden: Cognitive Reframing</h3>
                 <p class="text-gray-600 mb-6">Your thoughts are not facts. Unhelpful thought patterns, or "cognitive distortions," are like weeds in a garden. By identifying and reframing them, you can cultivate a more positive and realistic inner landscape. Click on a card to learn how to reframe a common distortion.</p>
                 <div id="distortions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                
-                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Reclaiming Ikigai: Authentic Daily Purpose</h3>
-                <p class="text-gray-600 mb-6">The popular Western Venn diagram of Ikigai can create pressure. Authentic Japanese Ikigai is more accessible—it's about finding joy and purpose in everyday moments and small rituals, not necessarily a single, grand, monetizable passion.</p>
-                <div class="grid md:grid-cols-2 gap-8 bg-white p-6 rounded-xl shadow-sm">
-                    <div>
-                        <h4 class="font-bold text-lg text-red-600 mb-2">Westernized Misconception</h4>
-                        <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Intersection of 4 complex circles.</li>
-                            <li>Implies a single, grand purpose.</li>
-                            <li class="font-semibold">Explicitly requires being paid.</li>
-                            <li>Can create pressure and inadequacy.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-lg text-green-600 mb-2">Authentic Japanese Concept</h4>
-                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>"A reason to wake up in the morning."</li>
-                            <li class="font-semibold">Found in small, daily joys & rituals.</li>
-                            <li>Not tied to profession or money.</li>
-                            <li>Reduces stress and promotes contentment.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Thrive with Self-Determination Theory (SDT)</h3>
-                <p class="text-gray-600 mb-6">SDT proposes three universal psychological needs essential for well-being and motivation. Hover over each need to see how to cultivate it.</p>
-                <div id="sdt-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             </div>
 
             <div id="health" class="content-section">
@@ -324,7 +317,7 @@
                 </div>
 
                 <h3 class="text-2xl font-semibold text-gray-800 mt-12 mb-4">Budget Bodybuilding Meal Plan (20:4 IF)</h3>
-                <p class="text-gray-600 mb-6">This plan is optimized for a student budget in Germany (shopping at Aldi Süd & Kaufland). Use the buttons to switch between weekly plans.</p>
+                <p class="text-gray-600 mb-6">This plan is optimized for a tight budget (shopping at discount supermarkets).</p>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
                     <h4 class="text-xl font-bold mb-3">Budget Shopping List</h4>
                     <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 mb-6">
@@ -419,10 +412,10 @@
                         <h4 class="font-bold text-lg text-blue-700 mb-2">P.A.R.A. System</h4>
                         <p class="font-semibold mb-2">Best for: Actionability & Productivity</p>
                         <ul class="list-disc list-inside text-gray-600 space-y-1">
-                           <li>Organizes all digital info by actionability.</li>
-                           <li>Top-down, hierarchical structure.</li>
-                           <li>Keeps active projects easily accessible.</li>
-                           <li>Manages files, notes, and tasks.</li>
+                            <li>Organizes all digital info by actionability.</li>
+                            <li>Top-down, hierarchical structure.</li>
+                            <li>Keeps active projects easily accessible.</li>
+                            <li>Manages files, notes, and tasks.</li>
                         </ul>
                     </div>
                     <div id="zettel-card" class="bg-white p-6 rounded-xl shadow-sm border-2 border-transparent">
@@ -447,6 +440,7 @@
             <div id="synthesis" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Synthesis & Action</h2>
                 <p class="text-lg text-gray-600 mb-8">This final section integrates the blueprint's components, emphasizing the "meta-skills" that amplify all other practices. Learn how to weave mindfulness into every action, balance ambition with well-being, and commit to this blueprint as an evolving guide for your life.</p>
+                
                 <div class="space-y-8">
                     <div class="bg-white p-6 rounded-xl shadow-sm">
                         <h3 class="text-xl font-bold text-gray-800 mb-3">🌿 Integrating Mindfulness Everywhere</h3>
@@ -462,19 +456,19 @@
                         <h3 class="text-xl font-bold text-gray-800 mb-3">⚖️ The Art of Ambitious Well-being</h3>
                         <p class="text-gray-600 mb-4">Sustainable success is built on a foundation of well-being, not at its expense. The goal is to integrate ambition and health, not to sacrifice one for the other.</p>
                         <ul class="list-disc list-inside text-gray-600 space-y-2">
-                           <li><b>Set Sustainable Goals:</b> Break large ambitions into manageable steps to avoid burnout.</li>
-                           <li><b>Prioritize Self-Care:</b> View sleep, nutrition, and rest as essential investments in your capacity for high performance.</li>
-                           <li><b>Establish Boundaries:</b> Protect your time and energy to prevent overextension.</li>
-                           <li><b>Nurture Support Networks:</b> Strong relationships provide the resilience needed to pursue ambitious goals.</li>
+                            <li><b>Set Sustainable Goals:</b> Break large ambitions into manageable steps to avoid burnout.</li>
+                            <li><b>Prioritize Self-Care:</b> View sleep, nutrition, and rest as essential investments in your capacity for high performance.</li>
+                            <li><b>Establish Boundaries:</b> Protect your time and energy to prevent overextension.</li>
+                            <li><b>Nurture Support Networks:</b> Strong relationships provide the resilience needed to pursue ambitious goals.</li>
                         </ul>
                     </div>
                      <div class="bg-white p-6 rounded-xl shadow-sm">
                         <h3 class="text-xl font-bold text-gray-800 mb-3">🔄 Your Evolving Blueprint</h3>
                         <p class="text-gray-600 mb-4">This document is not a static set of rules but a dynamic, living guide. Your life will change, and so should your blueprint.</p>
                         <ul class="list-disc list-inside text-gray-600 space-y-2">
-                           <li><b>Review and Adapt:</b> Schedule regular reviews (e.g., quarterly) to ensure the blueprint aligns with your current goals and values.</li>
-                           <li><b>Embrace Lifelong Learning:</b> Stay open to new research and personal insights to refine your approach.</li>
-                           <li><b>Practice Self-Compassion:</b> The goal is consistent progress, not flawless perfection. Be flexible and kind to yourself on this journey.</li>
+                            <li><b>Review and Adapt:</b> Schedule regular reviews (e.g., quarterly) to ensure the blueprint aligns with your current goals and values.</li>
+                            <li><b>Embrace Lifelong Learning:</b> Stay open to new research and personal insights to refine your approach.</li>
+                            <li><b>Practice Self-Compassion:</b> The goal is consistent progress, not flawless perfection. Be flexible and kind to yourself on this journey.</li>
                         </ul>
                     </div>
                 </div>
@@ -529,6 +523,26 @@ document.addEventListener('DOMContentLoaded', function () {
         presence: { title: 'Prompt: Anchoring in the Now', text: 'What are three things I can see, hear, or feel right now? I bring my full attention to this moment and find my peace here.'},
         readiness: { title: 'Prompt: Focusing on Myself', text: 'Instead of looking outward for my desire, I will look inward. What skill, habit, or mindset can I cultivate today to become the person who is ready for it?'}
     };
+
+    const assumptionData = {
+        define: { title: 'Phase 1: Define Your Desire', text: 'Be specific. Clarify exactly what you want. Write it down in a journal or create a vision board. Craft a positive, present-tense affirmation for it (e.g., "I am successful and fulfilled in my career.").'},
+        embody: { title: 'Phase 2: Embody the Feeling', text: 'This is the core practice. Regularly visualize your desire from a first-person view, engaging all your senses. The key is to *feel* the emotions of having it now (joy, security, love). Live from this end result, making decisions as if it\'s already your reality.'},
+        sustain: { title: 'Phase 3: Sustain the State', text: 'Maintain your assumption. Monitor your self-talk and replace doubt with your affirmation. Detach from *how* it will happen; trust the process. Regularly reflect on and revise any conflicting beliefs. Cultivate gratitude for what is coming as if it\'s already here.'}
+    };
+
+    const phaseBtns = document.querySelectorAll('.phase-btn');
+    if(phaseBtns.length > 0) {
+        const phaseDisplay = document.getElementById('phase-display');
+        phaseBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                phaseBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                const type = this.dataset.phase;
+                const data = assumptionData[type];
+                phaseDisplay.innerHTML = `<h5 class="font-bold text-lg mb-1 text-blue-900">${data.title}</h5><p class="text-blue-800">${data.text}</p>`;
+            });
+        });
+    }
 
     const trustItems = document.querySelectorAll('.trust-item');
     if(trustItems.length > 0) {
