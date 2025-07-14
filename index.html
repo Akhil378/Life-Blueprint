@@ -7,19 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: "Calm Neutral" - A palette using warm grays, soft beige, slate blue, and a gentle terracotta accent to create a calm, supportive, and harmonious feel. -->
-    <!-- Application Structure Plan: The SPA is structured around the core pillars of the blueprint. A fixed sidebar navigation allows users to instantly switch between these thematic sections without scrolling a long page. This non-linear, focused approach enhances usability by letting users dive into a specific area of interest, explore its interactive components, and absorb information without being overwhelmed. The goal is to transform the dense report into a modular, explorable dashboard for personal growth, where each section offers a distinct interactive learning experience. -->
-    <!-- Visualization & Content Choices: 
-         - Mindset/The Assumption Architect: Video Content -> Goal: Guide Action -> Viz: Interactive 3-Phase Guide -> Interaction: Click a phase to see detailed steps -> Justification: Translates the video's 12 principles into a more digestible, actionable 3-step framework. (HTML/CSS/JS).
-         - Mindset/Trusting the Flow: Video Content -> Goal: Guide Self-Reflection -> Viz: Interactive Comparison -> Interaction: Click a mindset to see a reflective prompt -> Justification: Translates a core concept into an actionable tool for cultivating peace and patience. (HTML/CSS/JS).
-         - Mindset/Cognitive Distortions: Report's Table 1 -> Goal: Organize/Inform -> Viz: Interactive flip-cards -> Interaction: Click to reveal details -> Justification: More engaging and tactile than a static table, encourages exploration. (HTML/CSS/JS).
-         - Health/Workout Plan: Text -> Goal: Organize/Guide -> Viz: Interactive Weekly Schedule -> Interaction: Click day to show workout -> Justification: Breaks down a long text-based plan into a manageable, interactive format, improving usability. (HTML/CSS/JS).
-         - Health/Circadian Rhythm: Report's Table 4 -> Goal: Inform/Change -> Viz: Interactive 24-hour clock diagram -> Interaction: Click on time segments -> Justification: Visually represents time-based protocols more effectively than a list. (HTML/CSS/JS).
-         - Grooming/Meal Plan: Report's Text -> Goal: Organize/Inform -> Viz: Tabbed interface & tables -> Interaction: Click to switch views -> Justification: Breaks down extensive text into manageable, interactive chunks. (HTML/CSS/JS).
-         - Interpersonal/EQ: Report's Text -> Goal: Inform/Organize -> Viz: Radar Chart -> Interaction: Hover for tooltips -> Justification: Visually represents the multi-faceted nature of EQ. (Chart.js).
-         - Productivity/P.A.R.A. vs Zettelkasten: Report's Table 8 -> Goal: Compare/Guide -> Viz: Interactive comparison -> Interaction: Click a use-case to highlight best method -> Justification: Provides direct, actionable guidance based on user's goal. (HTML/CSS/JS).
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #F8F7F4; color: #4A4A4A; }
         .nav-item { transition: all 0.2s ease-in-out; }
@@ -99,6 +86,62 @@
             <div id="mindset" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Mindset & Philosophy</h2>
                 <p class="text-lg text-gray-600 mb-8">This section explores the mental frameworks that shape your reality. Learn to cultivate a resilient and purposeful mind by understanding and reframing your thoughts, discovering authentic purpose, and satisfying your core psychological needs.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Identity Catalyst: Framework for Rapid Change</h3>
+                    <p class="text-gray-600 mb-6">Rapid change comes from a decisive identity shift. Instead of focusing on goals (what you want to *have*), focus on identity (who you want to *be*). Use this tool to define your new identity, design your environment, and gather daily proof.</p>
+                    <div class="space-y-6">
+                        <div>
+                            <label for="identity-statement" class="block text-sm font-medium text-gray-700">1. Define Your New Identity</label>
+                            <input type="text" id="identity-statement" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="e.g., I am an athlete. I am a writer.">
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700">2. Design Your Environment</h4>
+                            <div class="mt-2 space-y-2">
+                                <div class="relative flex items-start"><div class="flex h-5 items-center"><input id="env-clean" type="checkbox" class="h-4 w-4 rounded border-gray-300"></div><div class="ml-3 text-sm"><label for="env-clean" class="text-gray-700">Clean/Organize Your Workspace</label></div></div>
+                                <div class="relative flex items-start"><div class="flex h-5 items-center"><input id="env-social" type="checkbox" class="h-4 w-4 rounded border-gray-300"></div><div class="ml-3 text-sm"><label for="env-social" class="text-gray-700">Curate Social Feed (Follow Aspirations)</label></div></div>
+                                <div class="relative flex items-start"><div class="flex h-5 items-center"><input id="env-clothes" type="checkbox" class="h-4 w-4 rounded border-gray-300"></div><div class="ml-3 text-sm"><label for="env-clothes" class="text-gray-700">Update Wardrobe to Match Identity</label></div></div>
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="text-sm font-medium text-gray-700">3. Gather Daily Proof</h4>
+                             <div class="mt-1 flex rounded-md shadow-sm">
+                                <input type="text" id="proof-action" class="block w-full flex-1 rounded-none rounded-l-md border-gray-300" placeholder="e.g., Wrote for 15 minutes.">
+                                <button id="add-proof-btn" class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-4 text-gray-700 hover:bg-gray-100">Add</button>
+                            </div>
+                            <div id="proof-list" class="mt-3 space-y-2">
+                                <!-- Proof actions will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Antifragile Mind: Building Bulletproof Mentality</h3>
+                    <p class="text-gray-600 mb-6">A bulletproof mentality isn't about being unbreakable; it's about being antifragile—getting stronger from stress. Train this with voluntary hardship and narrative reframing.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-700 mb-3">1. Choose a Voluntary Hardship</h4>
+                            <select id="hardship-selector" class="w-full rounded-md border-gray-300">
+                                <option>Take a 3-minute cold shower</option>
+                                <option>Do a workout you typically avoid</option>
+                                <option>Fast for 16-18 hours</option>
+                                <option>Wake up 30 minutes earlier</option>
+                                <option>Hold a plank for max time</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-2">Commit to one this week. The point isn't the task itself, but the act of choosing discomfort.</p>
+                        </div>
+                        <div>
+                             <h4 class="font-semibold text-lg text-gray-700 mb-3">2. Reframe a Current Difficulty</h4>
+                             <textarea id="reframe-input" rows="2" class="w-full rounded-md border-gray-300" placeholder="Describe a current challenge..."></textarea>
+                             <button id="reframe-btn" class="mt-2 w-full bg-gray-800 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900 transition">Find the Strength</button>
+                        </div>
+                    </div>
+                     <div id="reframe-output" class="hidden mt-4 p-4 bg-gray-100 rounded-lg">
+                        <p class="font-semibold text-gray-800">Your Reframe:</p>
+                        <p id="reframe-text" class="text-gray-700"></p>
+                    </div>
+                </div>
 
                 <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Assumption Architect</h3>
@@ -116,6 +159,23 @@
                     </div>
                     <div id="phase-display" class="p-4 bg-blue-50 border-t-4 border-blue-500 rounded-b-lg min-h-[140px]">
                         <p class="text-blue-800 text-center">Click a phase to begin building your reality.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Synchronicity Compass: Decoding the Guideposts</h3>
+                    <p class="text-gray-600 mb-6">Synchronicities are not magic. They are meaningful coincidences where your brain's filtering system (the RAS) highlights things in your environment that match your current focus. They are a feedback loop confirming your alignment. Use this log to notice and reflect on them.</p>
+                    <div class="space-y-4">
+                        <input type="text" id="sync-event" placeholder="The Coincidence (e.g., Saw the same number 3 times)" class="w-full rounded-md border-gray-300">
+                        <input type="text" id="sync-focus" placeholder="My Current Focus (e.g., Thinking about a new project)" class="w-full rounded-md border-gray-300">
+                        <textarea id="sync-interpretation" placeholder="My Interpretation / Next Step..." rows="3" class="w-full rounded-md border-gray-300"></textarea>
+                        <button id="log-sync-btn" class="w-full bg-purple-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition">Log Synchronicity</button>
+                    </div>
+                    <div id="sync-log-display" class="mt-8">
+                        <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Synchronicity Log</h4>
+                        <div id="sync-log-entries" class="space-y-4">
+                            <p class="text-gray-500">Your logged synchronicities will appear here.</p>
+                        </div>
                     </div>
                 </div>
                 
@@ -144,6 +204,47 @@
                         <p class="text-blue-800 text-center">Click on a mindset to reveal a reflective prompt.</p>
                     </div>
                 </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Media Journal: Philosophical Thinking</h3>
+                    <p class="text-gray-600 mb-6">Transform passive media consumption into an active philosophical practice. By analyzing the media you consume, you can clarify your thinking, challenge your assumptions, and develop original ideas. Use this tool to deconstruct any piece of content (video, article, podcast).</p>
+                    <div id="media-journal-container">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="media-title" class="block text-sm font-medium text-gray-700">Media Title (e.g., book, video)</label>
+                                <input type="text" id="media-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., The Matrix">
+                            </div>
+                            <div>
+                                <label for="media-core-message" class="block text-sm font-medium text-gray-700">1. What is the core message or argument?</label>
+                                <textarea id="media-core-message" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Summarize the main point in your own words."></textarea>
+                            </div>
+                            <div>
+                                <label for="media-initial-reaction" class="block text-sm font-medium text-gray-700">2. What is my initial reaction?</label>
+                                <textarea id="media-initial-reaction" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="How does it make me feel? Do I agree or disagree?"></textarea>
+                            </div>
+                             <div>
+                                <label for="media-questions" class="block text-sm font-medium text-gray-700">3. What philosophical questions does it raise?</label>
+                                <textarea id="media-questions" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="e.g., What is the nature of reality? What does it mean to be free?"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Synergy Check: Did this media trigger any cognitive distortions?</label>
+                                <div id="media-distortion-checklist" class="mt-2 space-y-2">
+                                    <!-- Checklist will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                             <button id="add-media-entry-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Add to Journal Log</button>
+                        </div>
+                    </div>
+                    <div id="media-log-display" class="mt-8">
+                        <h4 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">My Media Journal Log</h4>
+                        <div id="media-log-entries" class="space-y-4">
+                            <p class="text-gray-500">Your journal entries will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+
 
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Your Mind is a Garden: Cognitive Reframing</h3>
                 <p class="text-gray-600 mb-6">Your thoughts are not facts. Unhelpful thought patterns, or "cognitive distortions," are like weeds in a garden. By identifying and reframing them, you can cultivate a more positive and realistic inner landscape. Click on a card to learn how to reframe a common distortion.</p>
@@ -249,6 +350,10 @@
                         <span id="breathing-text" class="text-lg font-semibold text-gray-700">Ready?</span>
                     </div>
                     <button id="breathing-start-btn" class="mt-6 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">Start Practice</button>
+                    <div id="gratitude-prompt" class="mt-6 p-4 bg-yellow-50 border-t-4 border-yellow-400 rounded-b-lg text-center hidden">
+                        <h5 class="font-bold text-yellow-900">A Moment for Gratitude</h5>
+                        <p class="text-yellow-800">What is one thing you appreciate right now?</p>
+                    </div>
                 </div>
             </div>
 
@@ -376,6 +481,29 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Interpersonal Excellence</h2>
                 <p class="text-lg text-gray-600 mb-8">This section focuses on mastering connection and influence. Learn to build stronger, more authentic relationships by integrating timeless principles of influence with modern frameworks of empathy and emotional intelligence.</p>
 
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Conversation Catalyst</h3>
+                    <p class="text-gray-600 mb-6">Never run out of things to say by turning simple observations into engaging conversation. Practice the Observation → Association → Anecdote/Question framework with this tool.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="observation-input" class="block text-sm font-medium text-gray-700">1. Start with an Observation</label>
+                            <input type="text" id="observation-input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="e.g., This is a beautiful park.">
+                        </div>
+                        <button id="catalyst-btn" class="w-full bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 transition">Generate Conversation Path</button>
+                        <div id="catalyst-output" class="hidden mt-4 space-y-4 p-4 bg-teal-50 rounded-lg">
+                            <div>
+                                <h4 class="font-bold text-teal-800">2. Brainstorm Associations</h4>
+                                <p class="text-sm text-teal-700">What does your observation make you think of? (e.g., other parks, nature, childhood memories, landscape design, seasons)</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-teal-800">3. Formulate an Anecdote or Question</h4>
+                                 <p class="text-sm text-teal-700"><strong>Anecdote:</strong> "This reminds me of a park I used to go to as a kid..."</p>
+                                 <p class="text-sm text-teal-700"><strong>Question:</strong> "What's the most beautiful park you've ever visited?" or "Do you have a favorite season to be outdoors?"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">The NVC Conversation Builder</h3>
                 <p class="text-gray-600 mb-6">Nonviolent Communication (NVC) transforms conflict into connection. Use this interactive tool to see how to reframe a judgmental statement into a clear, compassionate one using the four steps of NVC. Click "Next Step" to build the conversation.</p>
                 <div class="bg-white p-6 rounded-xl shadow-sm">
@@ -400,6 +528,38 @@
             <div id="productivity" class="content-section">
                 <h2 class="text-3xl font-bold text-gray-800 mb-2">Productivity & Information Mastery</h2>
                 <p class="text-lg text-gray-600 mb-8">This section provides a system for managing knowledge and turning ideas into action. Learn how to capture, organize, distill, and express information effectively to reduce cognitive load and supercharge your creative output.</p>
+                
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">The Polymath's Compass: Managing Multiple Interests</h3>
+                    <p class="text-gray-600 mb-6">Embrace your varied interests without feeling overwhelmed. Use this tool to define, prioritize, and rotate your focus in "seasons," ensuring steady progress across all your passions.</p>
+                    <div id="polymath-container" class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-700 mb-2">Add a New Interest</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <input type="text" id="interest-name" placeholder="Interest (e.g., Learn Guitar)" class="md:col-span-3 rounded-md border-gray-300">
+                                <input type="text" id="interest-project" placeholder="Project (e.g., Record one song)" class="rounded-md border-gray-300">
+                                <input type="text" id="interest-purpose" placeholder="Purpose (e.g., For creative expression)" class="rounded-md border-gray-300">
+                                <input type="text" id="interest-payoff" placeholder="Payoff (e.g., Feel fulfilled)" class="rounded-md border-gray-300">
+                            </div>
+                            <button id="add-interest-btn" class="mt-4 w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Add Interest</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-700 mb-3">Current Season (Focus: Max 3)</h4>
+                                <div id="current-season-list" class="space-y-3 min-h-[50px] bg-indigo-50 p-4 rounded-lg">
+                                    <p class="text-gray-500 text-sm">Drag interests here to focus on them.</p>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="text-lg font-semibold text-gray-700 mb-3">Someday / Maybe</h4>
+                                <div id="someday-list" class="space-y-3 min-h-[50px] bg-gray-100 p-4 rounded-lg">
+                                    <p class="text-gray-500 text-sm">Your other interests live here.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">P.A.R.A. or Zettelkasten?</h3>
                 <p class="text-gray-600 mb-6">Different knowledge management systems are suited for different tasks. P.A.R.A. is for action-oriented project management, while Zettelkasten is for idea generation and research. Click a use case below to see which system is a better fit.</p>
                 <div class="flex justify-center gap-4 mb-4">
@@ -417,6 +577,9 @@
                             <li>Keeps active projects easily accessible.</li>
                             <li>Manages files, notes, and tasks.</li>
                         </ul>
+                        <div class="mt-4 pt-3 border-t border-blue-200">
+                           <p class="text-sm text-blue-800"><strong class="font-semibold">Synergy Tip:</strong> Which <a href="#" class="font-bold underline" data-synergy-link="health">Health</a> habit will give you the energy to execute your projects this week?</p>
+                        </div>
                     </div>
                     <div id="zettel-card" class="bg-white p-6 rounded-xl shadow-sm border-2 border-transparent">
                          <h4 class="font-bold text-lg text-green-700 mb-2">Zettelkasten Method</h4>
@@ -479,18 +642,37 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // --- Basic Navigation ---
     const navItems = document.querySelectorAll('.nav-item');
     const contentSections = document.querySelectorAll('.content-section');
+    
+    // Centralized navigation function
+    function navigateTo(targetId) {
+        navItems.forEach(i => i.classList.remove('active'));
+        contentSections.forEach(s => s.classList.remove('active'));
+        
+        const activeNavItem = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+        const activeContentSection = document.getElementById(targetId);
+
+        if (activeNavItem) activeNavItem.classList.add('active');
+        if (activeContentSection) activeContentSection.classList.add('active');
+    }
 
     navItems.forEach(item => {
-        item.addEventListener('click', function (e) {
+        item.addEventListener('click', function(e) {
             e.preventDefault();
-            navItems.forEach(i => i.classList.remove('active'));
-            contentSections.forEach(s => s.classList.remove('active'));
-            this.classList.add('active');
             const targetId = this.getAttribute('data-target');
-            document.getElementById(targetId).classList.add('active');
+            navigateTo(targetId);
         });
+    });
+    
+    // --- Synergy Link Handler ---
+    document.body.addEventListener('click', function(e) {
+        if (e.target.matches('[data-synergy-link]')) {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('data-synergy-link');
+            navigateTo(targetId);
+        }
     });
 
     const distortionsData = [
@@ -501,6 +683,277 @@ document.addEventListener('DOMContentLoaded', function () {
         { name: "Mind Reading", weed: "They probably think I'm incompetent for asking that question.", flower: "I can't know what they're thinking. I should focus on my own actions and learning." },
         { name: "Labeling", weed: "I'm such an idiot for forgetting that appointment.", flower: "I made a mistake, but that doesn't define me. I am capable and can be more organized." }
     ];
+    
+    // --- Identity Catalyst ---
+    const addProofBtn = document.getElementById('add-proof-btn');
+    if (addProofBtn) {
+        addProofBtn.addEventListener('click', () => {
+            const proofActionInput = document.getElementById('proof-action');
+            const proofList = document.getElementById('proof-list');
+            const actionText = proofActionInput.value.trim();
+
+            if (actionText === "") return;
+
+            const li = document.createElement('div');
+            li.className = 'flex items-center justify-between bg-gray-100 p-2 rounded-md';
+            li.innerHTML = `
+                <span class="text-sm text-gray-800">${actionText}</span>
+                <span class="text-xs font-semibold text-green-600">PROOF</span>
+            `;
+            proofList.prepend(li);
+            proofActionInput.value = '';
+        });
+    }
+
+    // --- Antifragile Mind ---
+    const reframeBtn = document.getElementById('reframe-btn');
+    if(reframeBtn) {
+        reframeBtn.addEventListener('click', () => {
+            const reframeInput = document.getElementById('reframe-input');
+            const reframeOutput = document.getElementById('reframe-output');
+            const reframeText = document.getElementById('reframe-text');
+            if (reframeInput.value.trim() !== "") {
+                reframeText.textContent = `You're facing "${reframeInput.value}". This challenge is an opportunity to build resilience and prove your strength. How could this experience be making you stronger?`;
+                reframeOutput.classList.remove('hidden');
+            } else {
+                reframeOutput.classList.add('hidden');
+            }
+        });
+    }
+
+
+    // --- Synchronicity Log ---
+    const logSyncBtn = document.getElementById('log-sync-btn');
+    if (logSyncBtn) {
+        logSyncBtn.addEventListener('click', () => {
+            const event = document.getElementById('sync-event').value;
+            const focus = document.getElementById('sync-focus').value;
+            const interpretation = document.getElementById('sync-interpretation').value;
+            const logContainer = document.getElementById('sync-log-entries');
+
+            if (!event) {
+                alert('Please describe the coincidence.');
+                return;
+            }
+
+            const entryEl = document.createElement('div');
+            entryEl.className = 'p-4 bg-purple-50 rounded-lg border border-purple-200';
+            entryEl.innerHTML = `
+                <p class="text-sm text-gray-700"><strong>Event:</strong> ${event}</p>
+                <p class="text-sm text-gray-700 mt-1"><strong>My Focus:</strong> ${focus || 'N/A'}</p>
+                <p class="text-sm text-gray-700 mt-1"><strong>Interpretation:</strong> ${interpretation || 'N/A'}</p>
+            `;
+
+            if (logContainer.querySelector('p')) {
+                logContainer.innerHTML = '';
+            }
+            logContainer.prepend(entryEl);
+
+            document.getElementById('sync-event').value = '';
+            document.getElementById('sync-focus').value = '';
+            document.getElementById('sync-interpretation').value = '';
+        });
+    }
+
+    // --- Conversation Catalyst ---
+    const catalystBtn = document.getElementById('catalyst-btn');
+    if (catalystBtn) {
+        catalystBtn.addEventListener('click', () => {
+            const observationInput = document.getElementById('observation-input');
+            const catalystOutput = document.getElementById('catalyst-output');
+            if (observationInput.value.trim() !== "") {
+                catalystOutput.classList.remove('hidden');
+            } else {
+                catalystOutput.classList.add('hidden');
+            }
+        });
+    }
+
+
+    // --- Polymath Compass ---
+    const addInterestBtn = document.getElementById('add-interest-btn');
+    const currentSeasonList = document.getElementById('current-season-list');
+    const somedayList = document.getElementById('someday-list');
+
+    let interests = [];
+    let draggedItem = null;
+
+    function renderInterests() {
+        currentSeasonList.innerHTML = '';
+        somedayList.innerHTML = '';
+
+        const currentSeasonInterests = interests.filter(i => i.inSeason);
+        const somedayInterests = interests.filter(i => !i.inSeason);
+
+        if (currentSeasonInterests.length === 0) {
+             currentSeasonList.innerHTML = '<p class="text-gray-500 text-sm">Drag interests here to focus on them.</p>';
+        } else {
+            currentSeasonInterests.forEach(interest => currentSeasonList.appendChild(createInterestElement(interest)));
+        }
+
+        if (somedayInterests.length === 0) {
+            somedayList.innerHTML = '<p class="text-gray-500 text-sm">Your other interests live here.</p>';
+        } else {
+             somedayInterests.forEach(interest => somedayList.appendChild(createInterestElement(interest)));
+        }
+    }
+
+    function createInterestElement(interest) {
+        const div = document.createElement('div');
+        div.className = 'p-3 bg-white rounded-md shadow-sm cursor-grab active:cursor-grabbing border';
+        div.draggable = true;
+        div.dataset.id = interest.id;
+        div.innerHTML = `
+            <h5 class="font-bold text-gray-800">${interest.name}</h5>
+            <div class="text-xs text-gray-500 mt-1 space-y-0.5">
+                <p><strong>Project:</strong> ${interest.project}</p>
+                <p><strong>Purpose:</strong> ${interest.purpose}</p>
+                <p><strong>Payoff:</strong> ${interest.payoff}</p>
+            </div>
+        `;
+        div.addEventListener('dragstart', (e) => {
+            draggedItem = interest;
+            e.target.style.opacity = '0.5';
+        });
+        div.addEventListener('dragend', (e) => {
+            e.target.style.opacity = '1';
+            draggedItem = null;
+        });
+        return div;
+    }
+    
+    function setupDragAndDrop() {
+        [currentSeasonList, somedayList].forEach(list => {
+            list.addEventListener('dragover', (e) => e.preventDefault());
+            list.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedItem) {
+                    const targetListId = e.currentTarget.id;
+                    const inSeasonTarget = targetListId === 'current-season-list';
+
+                    const seasonCount = interests.filter(i => i.inSeason).length;
+                    if (inSeasonTarget && seasonCount >= 3 && !draggedItem.inSeason) {
+                        alert("You can only focus on a maximum of 3 interests per season.");
+                        return;
+                    }
+
+                    draggedItem.inSeason = inSeasonTarget;
+                    renderInterests();
+                }
+            });
+        });
+    }
+
+
+    if (addInterestBtn) {
+        addInterestBtn.addEventListener('click', () => {
+            const name = document.getElementById('interest-name').value;
+            const project = document.getElementById('interest-project').value;
+            const purpose = document.getElementById('interest-purpose').value;
+            const payoff = document.getElementById('interest-payoff').value;
+
+            if (!name || !project || !purpose || !payoff) {
+                alert('Please fill out all fields for the interest.');
+                return;
+            }
+            
+            const newInterest = { id: Date.now(), name, project, purpose, payoff, inSeason: false };
+            interests.push(newInterest);
+
+            document.getElementById('interest-name').value = '';
+            document.getElementById('interest-project').value = '';
+            document.getElementById('interest-purpose').value = '';
+            document.getElementById('interest-payoff').value = '';
+
+            renderInterests();
+        });
+        setupDragAndDrop();
+    }
+
+
+    // --- Media Journal ---
+    const addMediaEntryBtn = document.getElementById('add-media-entry-btn');
+    const mediaDistortionChecklist = document.getElementById('media-distortion-checklist');
+    
+    // Populate the checklist
+    if (mediaDistortionChecklist) {
+        distortionsData.forEach(d => {
+            const div = document.createElement('div');
+            div.className = 'relative flex items-start';
+            div.innerHTML = `
+                <div class="flex h-5 items-center">
+                    <input id="dist-${d.name.replace(/\s+/g, '-')}" name="distortions" type="checkbox" value="${d.name}" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="dist-${d.name.replace(/\s+/g, '-')}" class="font-medium text-gray-700">${d.name}</label>
+                </div>
+            `;
+            mediaDistortionChecklist.appendChild(div);
+        });
+    }
+
+    if (addMediaEntryBtn) {
+        addMediaEntryBtn.addEventListener('click', () => {
+            const title = document.getElementById('media-title').value;
+            const coreMessage = document.getElementById('media-core-message').value;
+            const initialReaction = document.getElementById('media-initial-reaction').value;
+            const questions = document.getElementById('media-questions').value;
+            const logContainer = document.getElementById('media-log-entries');
+            
+            const checkedDistortions = Array.from(document.querySelectorAll('#media-distortion-checklist input:checked')).map(cb => cb.value);
+
+            if (!title) {
+                alert('Please enter a media title.');
+                return;
+            }
+
+            const entryEl = document.createElement('div');
+            entryEl.className = 'p-4 bg-gray-50 rounded-lg border border-gray-200';
+            
+            let distortionsHTML = '';
+            if (checkedDistortions.length > 0) {
+                distortionsHTML = `
+                    <div>
+                        <p class="text-sm font-semibold text-red-600">Triggered Distortions:</p>
+                        <p class="text-sm text-red-700">${checkedDistortions.join(', ')}</p>
+                    </div>
+                `;
+            }
+
+            entryEl.innerHTML = `
+                <h5 class="font-bold text-md text-gray-800">${title}</h5>
+                <div class="mt-3 space-y-2">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Core Message:</p>
+                        <p class="text-sm text-gray-600">${coreMessage.replace(/\n/g, '<br>') || 'N/A'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">My Initial Reaction:</p>
+                        <p class="text-sm text-gray-600">${initialReaction.replace(/\n/g, '<br>') || 'N/A'}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Philosophical Questions:</p>
+                        <p class="text-sm text-gray-600">${questions.replace(/\n/g, '<br>') || 'N/A'}</p>
+                    </div>
+                    ${distortionsHTML}
+                </div>
+            `;
+            
+            if(logContainer.querySelector('p')) {
+                logContainer.innerHTML = '';
+            }
+
+            logContainer.prepend(entryEl);
+
+            // Clear input fields
+            document.getElementById('media-title').value = '';
+            document.getElementById('media-core-message').value = '';
+            document.getElementById('media-initial-reaction').value = '';
+            document.getElementById('media-questions').value = '';
+            document.querySelectorAll('#media-distortion-checklist input:checked').forEach(cb => cb.checked = false);
+        });
+    }
+
 
     const sdtData = [
         { name: 'Autonomy', icon: '🕊️', description: 'The need to feel a sense of choice and psychological liberty. Cultivate it by aligning actions with personal values and setting self-endorsed goals.' },
@@ -612,13 +1065,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (breathCircle) {
         const breathText = document.getElementById('breathing-text');
         const breathBtn = document.getElementById('breathing-start-btn');
+        const gratitudePrompt = document.getElementById('gratitude-prompt');
         let breathInterval;
         breathBtn.addEventListener('click', () => {
+            gratitudePrompt.classList.add('hidden');
             if(breathBtn.textContent === "Stop Practice"){
                 clearInterval(breathInterval);
                 breathBtn.textContent = "Start Practice";
                 breathText.textContent = "Finished";
                 breathCircle.classList.remove('inhale');
+                gratitudePrompt.classList.remove('hidden');
                 return;
             }
             breathBtn.textContent = "Stop Practice";
