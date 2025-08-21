@@ -4,17 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Antifragile Blueprint: Version 18.0</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23a78bfa' d='M50 0L61.8 38.2L100 50L61.8 61.8L50 100L38.2 61.8L0 50L38.2 38.2L50 0Z'%3E%3C/path%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Fallback background */
         }
+        
+        /* Animated Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 10% 20%, rgba(167, 139, 250, 0.15), transparent 30%),
+                        radial-gradient(circle at 80% 90%, rgba(56, 189, 248, 0.15), transparent 30%);
+            animation: gradient-flow 20s ease-in-out infinite;
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .card-gradient {
-            background: linear-gradient(145deg, #1f2d3d, #111827);
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .card-gradient:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(167, 139, 250, 0.2);
+        }
+
         .accent-gradient-text {
             background: linear-gradient(90deg, #38bdf8, #a78bfa);
             -webkit-background-clip: text;
@@ -22,87 +54,67 @@
             background-clip: text;
             text-fill-color: transparent;
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
         
+        /* Scroll Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom blockquote styles */
+        .note, .info, .quote, .warning {
+            background-color: rgba(31, 41, 55, 0.3);
+            border-left-width: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        .note { border-color: #3b82f6; }
+        .info { border-color: #22c55e; }
+        .quote { border-color: #ec4899; font-style: italic; }
+        .warning { border-color: #f97316; }
+
         /* Accordion styles */
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out, border-color 0.5s ease;
             padding: 0 1.5rem;
         }
-
-        /* Custom blockquote styles for notes, info, quotes, warnings */
-        .note {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-left: 4px solid #3b82f6;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 0.5rem 0.5rem 0;
-        }
-        .info {
-            background-color: rgba(34, 197, 94, 0.1);
-            border-left: 4px solid #22c55e;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 0.5rem 0.5rem 0;
-        }
-        .quote {
-            background-color: rgba(236, 72, 153, 0.1);
-            border-left: 4px solid #ec4899;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 0.5rem 0.5rem 0;
-            font-style: italic;
-        }
-        .warning {
-            background-color: rgba(249, 115, 22, 0.1);
-            border-left: 4px solid #f97316;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 0.5rem 0.5rem 0;
+        .accordion-toggle[aria-expanded="true"] + .accordion-content {
+             border-top: 1px solid rgba(167, 139, 250, 0.2);
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
 
     <!-- Header & Navigation -->
-    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 py-4 px-4 md:px-8 border-b border-gray-700/50">
+    <header class="bg-black/30 backdrop-blur-sm sticky top-0 z-50 py-4 px-4 md:px-8 border-b border-gray-700/50">
         <div class="container mx-auto flex justify-between items-center">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold accent-gradient-text">The Antifragile Blueprint 18.0</h1>
-                <p class="text-sm text-gray-400">From Doer to Director</p>
+                <h1 class="text-xl md:text-2xl font-bold accent-gradient-text">Antifragile Blueprint 18.0</h1>
             </div>
-            <!-- Desktop Navigation -->
-            <nav class="hidden lg:flex space-x-4 text-sm">
+            <nav class="hidden lg:flex space-x-6 text-sm">
                 <a href="#bootstrap" class="hover:text-sky-400 transition-colors duration-300">Bootstrap</a>
                 <a href="#roadmap" class="hover:text-sky-400 transition-colors duration-300">Roadmap</a>
-                <a href="#pillar1" class="hover:text-sky-400 transition-colors duration-300">Pillar 1: Discipline</a>
-                <a href="#pillar4" class="hover:text-sky-400 transition-colors duration-300">Pillar 4: Health</a>
-                <a href="#pillar5" class="hover:text-sky-400 transition-colors duration-300">Pillar 5: Connection</a>
+                <a href="#pillars" class="hover:text-sky-400 transition-colors duration-300">Pillars</a>
                 <a href="#synthesis" class="hover:text-sky-400 transition-colors duration-300">Synthesis</a>
             </nav>
-            <!-- Mobile Menu Button -->
             <div class="lg:hidden">
                 <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
         </div>
-        <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="hidden lg:hidden mt-4">
             <a href="#bootstrap" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Bootstrap Protocol</a>
             <a href="#roadmap" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">90-Day Roadmap</a>
-            <a href="#pillar1" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 1: Discipline</a>
-            <a href="#pillar2" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 2: Dopamine</a>
-            <a href="#pillar3" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 3: Mindset</a>
-            <a href="#pillar4" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 4: Health</a>
-            <a href="#pillar5" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 5: Connection</a>
-            <a href="#pillar6" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillar 6: Mastery</a>
+            <a href="#pillars" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Pillars</a>
             <a href="#synthesis" class="mobile-nav-link block py-2 px-4 text-sm hover:bg-gray-700 rounded">Synthesis</a>
         </div>
     </header>
@@ -110,237 +122,149 @@
     <!-- Main Content -->
     <main class="container mx-auto p-4 md:p-8">
 
-        <!-- Introduction -->
-        <section id="intro" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-4">Introduction: The Master Control Program</h2>
-            <div class="space-y-4 text-gray-300">
-                <p>This document is the master manual for your Life Blueprint. Its purpose is to facilitate the single most important transformation of your life: the evolution from a <strong class="text-rose-400">Doer (low agency)</strong> to a <strong class="text-sky-400">Director (high agency)</strong>.</p>
-                <p>Version 18.0 is built on a new prime principle: <strong class="text-white">antifragility</strong>. An antifragile system doesn't just survive shocks; it gets stronger from them. This is achieved through the <strong class="text-white">Warrior-Explorer Duality</strong>, the master control program for this entire blueprint.</p>
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <div class="card-gradient p-6 rounded-xl border border-violet-500/30">
-                        <h3 class="font-bold text-xl text-violet-400 mb-2">Warrior Mode (Focus & Execution)</h3>
-                        <p class="text-sm">This is the mode for taking a hill. You have a clear objective, a proven map, and the mission is conquest. You apply relentless discipline and concentration of force to achieve a specific outcome.</p>
-                    </div>
-                    <div class="card-gradient p-6 rounded-xl border border-amber-500/30">
-                        <h3 class="font-bold text-xl text-amber-400 mb-2">Explorer Mode (Data & Adaptation)</h3>
-                        <p class="text-sm">This is the mode for mapping the territory. The mission is discovery. You run experiments, gather information, and strategically rest. Mistakes are not failures; they are the valuable data you are seeking.</p>
-                    </div>
-                </div>
-            </div>
+        <!-- Hero Section -->
+        <section id="hero" class="text-center my-16 md:my-24 animate-on-scroll">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight">The Transformation from <span class="text-rose-400">Doer</span> to <span class="accent-gradient-text">Director</span></h1>
+            <p class="mt-6 max-w-3xl mx-auto text-lg text-gray-400">An adaptive operating system for high agency in an era of unprecedented change. This is not a rigid script; it is a toolkit for navigating the two essential modes of life: Warrior and Explorer.</p>
         </section>
 
         <!-- The Bootstrap Protocol -->
-        <section id="bootstrap" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">The Bootstrap Protocol (Minimum Viable System)</h2>
-            <p class="text-gray-400 mb-6">Your first task is to build momentum. Master this for 2-4 weeks before beginning your first 90-Day Cycle. Consistency is the only metric of success.</p>
+        <section id="bootstrap" class="mb-24">
+            <div class="text-center animate-on-scroll">
+                <h2 class="text-3xl font-bold text-white mb-2">The Bootstrap Protocol</h2>
+                <p class="text-gray-400 mb-10 max-w-2xl mx-auto">Your first mission: build momentum. Master these four actions daily for 2-4 weeks. Consistency is the only metric.</p>
+            </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50 h-full">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll" style="transition-delay: 100ms;">
                     <h3 class="font-bold text-lg text-sky-400 mb-2">1. Win the Morning</h3>
-                    <p class="text-sm">Within 10 mins of waking, get 2 mins of cold exposure (cold shower). A non-negotiable win.</p>
+                    <p class="text-sm">Within 10 mins of waking, get 2 mins of cold exposure. A non-negotiable win.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50 h-full">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll" style="transition-delay: 200ms;">
                     <h3 class="font-bold text-lg text-sky-400 mb-2">2. Define the Next Mission</h3>
                     <p class="text-sm">The night before, write down the 1-3 most important tasks for the next day.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50 h-full">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll" style="transition-delay: 300ms;">
                     <h3 class="font-bold text-lg text-sky-400 mb-2">3. Engage the Body</h3>
                     <p class="text-sm">Perform at least 10 minutes of physical movement. The goal is to act, not to be perfect.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50 h-full">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll" style="transition-delay: 400ms;">
                     <h3 class="font-bold text-lg text-sky-400 mb-2">4. Close the Loop</h3>
-                    <p class="text-sm">For every piece of content consumed, take one immediate, small action to implement a single idea.</p>
+                    <p class="text-sm">For every piece of content consumed, take one immediate, small action.</p>
                 </div>
             </div>
         </section>
 
         <!-- The 90-Day Implementation Cycle -->
-        <section id="roadmap" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">The 90-Day Implementation Cycle</h2>
-            <p class="text-gray-400 mb-6">Install the full blueprint using periodization, mastering each core pillar over a 90-day themed quarter.</p>
+        <section id="roadmap" class="mb-24">
+            <div class="text-center animate-on-scroll">
+                <h2 class="text-3xl font-bold text-white mb-2">The 90-Day Implementation Cycle</h2>
+                <p class="text-gray-400 mb-10 max-w-2xl mx-auto">Install the full blueprint using periodization, mastering each core pillar over a 90-day themed quarter.</p>
+            </div>
             <div class="space-y-4">
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll">
                     <h3 class="font-bold text-lg text-violet-400 mb-2">Quarter 1: The Foundation of Reality (Pillar 1 - The Five Rings)</h3>
                     <p class="text-sm"><strong>Focus:</strong> Brutal self-assessment (The Earth Ring). Master the habit of tracking your time, energy, and key behaviors.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50">
-                    <h3 class="font-bold text-lg text-green-400 mb-2">Quarter 2: The Energy Engine (Pillar 4 - Health & Well-being)</h3>
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll">
+                    <h3 class="font-bold text-lg text-green-400 mb-2">Quarter 2: The Energy Engine (Pillar 4 - Health)</h3>
                     <p class="text-sm"><strong>Focus:</strong> With an accurate map from Q1, build your energy reserves. Systematize sleep, nutrition, and exercise.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll">
                     <h3 class="font-bold text-lg text-sky-400 mb-2">Quarter 3: The Motivation System (Pillar 2 - Dopamine)</h3>
                     <p class="text-sm"><strong>Focus:</strong> With a stable energy baseline, fine-tune your neurochemical engine. Master attaching motivation to the effort itself.</p>
                 </div>
-                <div class="card-gradient p-6 rounded-xl shadow-lg border border-gray-700/50">
+                <div class="card-gradient p-6 rounded-xl animate-on-scroll">
                     <h3 class="font-bold text-lg text-amber-400 mb-2">Quarter 4: The Connection Protocol (Pillar 5 - Connection)</h3>
                     <p class="text-sm"><strong>Focus:</strong> With internal systems running smoothly, direct your attention outward. Master high-agency communication.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Pillar 1: The Way of the Five Rings -->
-        <section id="pillar1" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 1: The Way of the Five Rings (The System for Discipline)</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> In Warrior Mode, use all five rings to execute a mission. In Explorer Mode, live in the Earth Ring, gathering data for your next Warrior sprint.</p></div>
-            <div class="space-y-4">
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-violet-400">The Five Rings</span>
-                    </button>
-                    <div class="accordion-content"><div class="pb-6 space-y-4">
-                        <p><strong class="text-white">Ring 1: Earth (Brutal Self-Assessment):</strong> Face reality without excuses. Track your time and behaviors for one week.</p>
-                        <p><strong class="text-white">Ring 2: Water (Consistent Adaptation):</strong> Rigid plans fail. Adapt your strategy. Start with small, consistent actions.</p>
-                        <p><strong class="text-white">Ring 3: Fire (Productive Rage):</strong> Channel emotion productively. Convert anger at mediocrity into tomorrow's mission.</p>
-                        <p><strong class="text-white">Ring 4: Wind (The Humility of Mastery):</strong> Always remain a student. Continuously study those who are better than you.</p>
-                        <p><strong class="text-white">Ring 5: Void (The Nature of Eternal Practice):</strong> The struggle is the discipline. Ask, "What is today's battle?"</p>
-                    </div></div>
-                </div>
+        <!-- All Pillars Section -->
+        <section id="pillars" class="mb-24">
+            <div class="text-center animate-on-scroll">
+                <h2 class="text-3xl font-bold text-white mb-10">The Core Pillars</h2>
             </div>
-        </section>
-
-        <!-- Pillar 2: Dopamine & The Drive System -->
-        <section id="pillar2" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 2: Dopamine & The Drive System</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> In Warrior Mode, use these protocols to sustain motivation. In Explorer Mode, experiment to understand your personal triggers.</p></div>
-            <div class="space-y-4">
-                 <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-sky-400">Dopamine Management</span>
-                    </button>
-                    <div class="accordion-content"><div class="pb-6 space-y-4">
-                        <p><strong class="text-white">The Cardinal Rule: Attach Reward to the Effort.</strong> Spike your dopamine from the friction itself, not the end goal. During a challenge, tell yourself, "I am here by choice, and I love this struggle."</p>
-                        <p><strong class="text-white">Protocols:</strong> Harness Intermittent Rewards, Leverage Deliberate Cold Exposure, Use Modulators Strategically, Build Social Connection.</p>
-                    </div></div>
-                </div>
+            
+            <!-- Pillar 1: Discipline -->
+            <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>Pillar 1: The Way of the Five Rings (Discipline)</h3>
+                <div class="note"><p><strong>Mode Application:</strong> In Warrior Mode, use all five rings to execute. In Explorer Mode, live in the Earth Ring to gather data.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-violet-400">The Five Rings</span></button><div class="accordion-content"><div class="p-6 space-y-4"><p><strong>Ring 1: Earth (Brutal Self-Assessment):</strong> Face reality without excuses. Track your time and key behaviors for one full week. This is the primary tool of Explorer Mode.</p><p><strong>Ring 2: Water (Consistent Adaptation):</strong> Rigid plans fail. A Director adapts their strategy to the terrain. Start with small, consistent actions that you cannot fail at.</p><p><strong>Ring 3: Fire (Productive Rage):</strong> A Director channels emotion productively. Anger at your own mediocrity is fuel. Each day, convert specific points of anger about your performance into tomorrow's mission.</p><p><strong>Ring 4: Wind (The Humility of Mastery):</strong> A Director knows that the moment they believe they have "arrived" is the moment they fall. Always remain a student. Continuously study those who are better than you to stay sharp.</p><p><strong>Ring 5: Void (The Nature of Eternal Practice):</strong> The struggle never ends. A Director understands that the struggle is the discipline. Stop asking, "When does this get easier?" and start asking, "What is today's battle?"</p></div></div></div>
             </div>
-        </section>
 
-        <!-- Pillar 3: Mindset & Philosophy -->
-        <section id="pillar3" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 3: Mindset & Philosophy</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> Know when to apply these models. "Growth is a Lobster" is for Explorer Mode; "The Decisive Cut" signals a shift into Warrior Mode.</p></div>
-            <div class="space-y-4">
-                 <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-indigo-400">Core Mental Models</span>
-                    </button>
-                    <div class="accordion-content"><div class="pb-6 space-y-4">
-                        <p><strong class="text-white">The Great Bifurcation:</strong> The Director (high agency) assigns work and solves problems. The Doer (low agency) is assigned work and conforms.</p>
-                        <p><strong class="text-white">Growth is a Lobster:</strong> To grow, you must shed your old shell (identity). The process is painful but necessary.</p>
-                        <p><strong class="text-white">Mistakes are the Only Source of Truth:</strong> Your own experiments are the only teacher 100% tailored to you.</p>
-                        <p><strong class="text-white">The Decisive Cut:</strong> When you decide, you cut off the person you used to be.</p>
-                    </div></div>
-                </div>
+            <!-- Pillar 2: Dopamine -->
+            <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.7 17.3l.028-.028M12 21l.028-.028m4.243-3.643l.028-.028M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Pillar 2: Dopamine & The Drive System</h3>
+                <div class="note"><p><strong>Mode Application:</strong> In Warrior Mode, consciously use these protocols to sustain motivation. In Explorer Mode, experiment with these tools to understand your personal triggers and baseline.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-sky-400">Dopamine Management</span></button><div class="accordion-content"><div class="p-6 space-y-4"><p><strong>The Cardinal Rule: Attach Reward to the Effort.</strong> The most powerful skill is to spike your dopamine from the effort and friction itself, not from the end goal. During moments of intense challenge, tell yourself, "I am here by choice, and I love this struggle."</p><p><strong>Protocols:</strong> Harness Intermittent Rewards, Leverage Deliberate Cold Exposure, Strategic Use of Modulators, The Foundation of Social Connection.</p></div></div></div>
             </div>
-        </section>
 
-        <!-- Pillar 4: Health & Well-being -->
-        <section id="pillar4" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 4: Health & Well-being (The Health Investment)</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> In Warrior Mode, optimize for peak performance. In Explorer Mode, experiment with new routines to gather data.</p></div>
-            <div class="warning"><p><strong class="text-white">Energy Management System:</strong> A Director is a master of energy, not just time. Match tasks to energy levels and schedule strategic recovery.</p></div>
-            <div class="space-y-4">
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-green-400">Upgraded 6-Day Home Workout Plan</span>
-                    </button>
-                    <div class="accordion-content">
-                        <div class="pb-6 space-y-4">
-                           <div class="info"><p><strong class="text-white">Guiding Principles:</strong> Full Range of Motion, Controlled Tempo, Controlled Negatives, Progressive Overload.</p></div>
-                           <div>
-                               <h4 class="font-bold text-white mb-2">Mon & Thu: Push Focus</h4>
-                               <ul class="list-disc list-inside text-sm space-y-1">
-                                   <li>Push-Ups: 4x10-15</li><li>Pike Push-Ups: 3x8-12</li><li>Triceps Dips: 4x12-15</li><li>Incline Push-Ups: 3x12-18</li><li>Shoulder Taps: 3x20</li>
-                               </ul>
-                           </div>
-                           <div>
-                               <h4 class="font-bold text-white mb-2 mt-4">Tue & Fri: Leg & Cardio Focus</h4>
-                               <ul class="list-disc list-inside text-sm space-y-1">
-                                   <li>Cardio Blast: 5-10 min</li><li>Squats: 4x20</li><li>Bulgarian Split Squats: 3x12 (each)</li><li>Glute Bridges: 4x20</li><li>Wall Sit: 3x30-45s</li><li>Walking Lunges: 3x20</li>
-                               </ul>
-                           </div>
-                           <div>
-                               <h4 class="font-bold text-white mb-2 mt-4">Sat: Full Body Circuit (3-4 rounds)</h4>
-                               <p class="text-sm">Push-Ups (15), Squats (20), Dips (15), Glute Bridges (20), Pike Push-Ups (10), Wall Sit (45s).</p>
-                           </div>
-                           <div>
-                               <h4 class="font-bold text-white mb-2 mt-4">Wed & Sun: Active Recovery</h4>
-                               <p class="text-sm">Endurance skipping, grip strength, full-body stretching.</p>
-                           </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Pillar 3: Mindset -->
+            <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>Pillar 3: Mindset & Philosophy</h3>
+                <div class="note"><p><strong>Mode Application:</strong> Know when to apply these models. "Growth is a Lobster" is for Explorer Mode; "The Decisive Cut" signals a shift into Warrior Mode.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-indigo-400">Core Mental Models</span></button><div class="accordion-content"><div class="p-6 space-y-4"><p><strong>The Great Bifurcation: Doer vs. Director.</strong> The Director (High Agency) assigns work, pursues their own interests, and solves problems. The Doer (Low Agency) is assigned work, conforms to scripts, and is characterized by Learned Helplessness.</p><p><strong>Winning the Mind Game:</strong> Your mind interprets reality in stories. To grow is like a lobster shedding its shell—painful but necessary. Mistakes are your only source of truth.</p><p><strong>Toolkit for Self-Transformation:</strong> The Decisive Cut (entering Warrior Mode), The Identity Laboratory (experimenting in Explorer Mode), Deconstructing Your Programming, The Courage Curriculum (confidence follows action), and State Management Through Environment.</p></div></div></div>
             </div>
-        </section>
 
-        <!-- Pillar 5: The Art of Connection -->
-        <section id="pillar5" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 5: The Art of Connection (High-Agency Communication)</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> In Warrior Mode, use for high-stakes communication. In Explorer Mode, practice in low-stakes environments to refine your technique.</p></div>
-            <div class="space-y-4">
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-amber-400">The Director's Communication OS</span>
-                    </button>
-                    <div class="accordion-content"><div class="pb-6 space-y-4">
-                        <p><strong class="text-white">The Golden Thread (Core Philosophy):</strong> The foundation is genuine curiosity + generous attention. Shift from "How am I being perceived?" (Doer) to "Who is this person?" (Director).</p>
-                        <p><strong class="text-white">Foundational Practices:</strong> Master presence, the 3-second rule (presence before content), and meaningful pauses.</p>
-                        <p><strong class="text-white">Conversational Toolkit:</strong> Use High-Value Questions ("What/How"), the Conversational Boomerang (Receive → Reflect → Return), and Reading the Room (trust non-verbal cues).</p>
-                    </div></div>
-                </div>
+            <!-- Pillar 4: Health -->
+             <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>Pillar 4: Health & Well-being</h3>
+                <div class="note"><p><strong>Mode Application:</strong> In Warrior Mode, optimize for peak performance. In Explorer Mode, experiment with new routines to gather data.</p></div>
+                <div class="warning"><p><strong>Energy Management System:</strong> A Director is a master of energy, not just time. Match high-cognition tasks to peak energy windows. Schedule strategic recovery. Respect the 4-Hour Rule for deep work.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-green-400">Upgraded 6-Day Home Workout Plan</span></button><div class="accordion-content"><div class="p-6 space-y-4"><div class="info"><p><strong>Guiding Principles:</strong> Full Range of Motion, Controlled Tempo, Controlled Negatives, Progressive Overload.</p></div><div><h4 class="font-bold text-white mb-2">Mon & Thu: Push Focus</h4><ul class="list-disc list-inside text-sm space-y-1"><li>Push-Ups: 4x10-15</li><li>Pike Push-Ups: 3x8-12</li><li>Triceps Dips: 4x12-15</li><li>Incline Push-Ups: 3x12-18</li><li>Shoulder Taps: 3x20</li></ul></div><div><h4 class="font-bold text-white mb-2 mt-4">Tue & Fri: Leg & Cardio Focus</h4><ul class="list-disc list-inside text-sm space-y-1"><li>Cardio Blast: 5-10 min</li><li>Squats: 4x20</li><li>Bulgarian Split Squats: 3x12 (each)</li><li>Glute Bridges: 4x20</li><li>Wall Sit: 3x30-45s</li><li>Walking Lunges: 3x20</li></ul></div><div><h4 class="font-bold text-white mb-2 mt-4">Sat: Full Body Circuit (3-4 rounds)</h4><p class="text-sm">Push-Ups (15), Squats (20), Dips (15), Glute Bridges (20), Pike Push-Ups (10), Wall Sit (45s).</p></div><div><h4 class="font-bold text-white mb-2 mt-4">Wed & Sun: Active Recovery</h4><p class="text-sm">Endurance skipping, grip strength, full-body stretching.</p></div></div></div></div>
             </div>
-        </section>
 
-        <!-- Pillar 6: Productivity & Mastery -->
-        <section id="pillar6" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Pillar 6: Productivity & Mastery</h2>
-            <div class="note"><p><strong class="text-white">Mode Application:</strong> Strategic Preparation is Explorer Mode. Concentration of Force and Disciplined Execution are Warrior Mode.</p></div>
-            <div class="space-y-4">
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
-                    <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
-                        <span class="text-xl font-semibold text-rose-400">Strategic & Learning Frameworks</span>
-                    </button>
-                    <div class="accordion-content"><div class="pb-6 space-y-4">
-                        <p><strong class="text-white">Strategic Thinking Framework:</strong> Evolve a central idea through changing circumstances via Intent, Self-Analysis (SWOT), Preparation, Concentration of Force, Execution, and Adaptability.</p>
-                        <p><strong class="text-white">Ultralearning Framework:</strong> Acquire skills via Metalearning (learn how to learn), Directness (learn in context), and Active Recall (pull info out).</p>
-                        <p><strong class="text-white">Bias Toward Action:</strong> Implement immediately, find out instead of figuring out, and track progress systematically.</p>
-                    </div></div>
-                </div>
+            <!-- Pillar 5: Connection -->
+             <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>Pillar 5: The Art of Connection</h3>
+                <div class="note"><p><strong>Mode Application:</strong> In Warrior Mode, use for high-stakes communication. In Explorer Mode, practice in low-stakes environments to refine your technique.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-amber-400">High-Agency Communication</span></button><div class="accordion-content"><div class="p-6 space-y-4"><p><strong>The Golden Thread (Core Philosophy):</strong> The foundation is genuine curiosity + generous attention. Shift from "How am I being perceived?" (Doer) to "Who is this person and what can I discover?" (Director).</p><p><strong>Foundational Practices:</strong> Master The Power of Presence, The 3-Second Rule (Presence Before Content), and The Art of Meaningful Pauses.</p><p><strong>The Conversational Toolkit:</strong> Use High-Value Questions (ask "What" and "How"), The Conversational Boomerang (Receive → Reflect → Return), and Reading the Room (trust non-verbal cues).</p><p><strong>Advanced Applications:</strong> Navigate Difficult Conversations by changing your goal from winning to understanding. Translate connection to digital channels by being twice as explicit with tone.</p></div></div></div>
+            </div>
+
+            <!-- Pillar 6: Mastery -->
+             <div class="mb-12 animate-on-scroll">
+                <h3 class="text-2xl font-bold text-white mb-4 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414M19.778 19.778l-1.414-1.414M19.778 5.636l-1.414 1.414M5.636 19.778l-1.414 1.414M12 12a6 6 0 110-12 6 6 0 010 12z"></path></svg>Pillar 6: Productivity & Mastery</h3>
+                <div class="note"><p><strong>Mode Application:</strong> Strategic Preparation is Explorer Mode. Concentration of Force and Disciplined Execution are Warrior Mode.</p></div>
+                <div class="accordion-item card-gradient rounded-xl"><button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false"><span class="text-xl font-semibold text-rose-400">Strategic & Learning Frameworks</span></button><div class="accordion-content"><div class="p-6 space-y-4"><p><strong>The Strategic Thinking Framework:</strong> Evolve a central idea through changing circumstances via Strategic Intent, Self-Analysis (SWOT), Strategic Preparation, Concentration of Force, Disciplined Execution, Adaptability, and Studying General Principles.</p><p><strong>The Ultralearning Framework:</strong> Acquire skills via Metalearning (learn how to learn), Directness (learn in the real context), and Active Recall (pull information out).</p><p><strong>The Bias Toward Action:</strong> For every piece of content you consume, take one immediate action. Don't Figure It Out, Find Out. Track progress systematically.</p></div></div></div>
             </div>
         </section>
         
         <!-- Foundational Layers: Synthesis & Evolution -->
         <section id="synthesis" class="mb-16">
-            <h2 class="text-3xl font-bold text-white mb-2">Foundational Layers: Synthesis & Evolution</h2>
+            <div class="text-center animate-on-scroll">
+                <h2 class="text-3xl font-bold text-white mb-10">Synthesis & Evolution</h2>
+            </div>
             <div class="space-y-4">
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
+                <div class="accordion-item card-gradient rounded-xl animate-on-scroll">
                     <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
                         <span class="text-xl font-semibold text-rose-400">The Weekly Synthesis & Review</span>
                     </button>
                     <div class="accordion-content">
-                        <div class="pb-6 space-y-4">
-                           <div class="warning"><p><strong class="text-white">Closing the Feedback Loop:</strong> A system without review is destined to fail. Conduct this every Sunday.</p></div>
+                        <div class="p-6 space-y-4">
+                           <div class="warning"><p>A system without review is destined to fail. Conduct this every Sunday.</p></div>
                            <ol class="list-decimal list-inside space-y-2">
-                               <li><strong class="text-white">Mode Declaration:</strong> Based on last week's data, declare: Warrior Week or Explorer Week?</li>
-                               <li><strong class="text-white">Data Review (Earth Ring):</strong> What is the objective reality of your performance?</li>
-                               <li><strong class="text-white">System Check:</strong> What is the biggest point of friction? What needs a tweak?</li>
-                               <li><strong class="text-white">Plan the Coming Week:</strong> Schedule non-negotiables based on your Mode Declaration.</li>
+                               <li><strong>Mode Declaration (The Prime Question):</strong> Based on last week's data, declare your intention for the coming week: Will this be a Warrior Week or an Explorer Week?</li>
+                               <li><strong>Data Review (The Earth Ring):</strong> Look at your tracked metrics. What is the objective reality of your performance?</li>
+                               <li><strong>System Check:</strong> What is the biggest point of friction? What needs a small tweak (The Water Ring)?</li>
+                               <li><strong>Plan the Coming Week:</strong> Based on your Mode Declaration, schedule your non-negotiables.</li>
                            </ol>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item card-gradient rounded-xl shadow-lg border border-gray-700/50">
+                <div class="accordion-item card-gradient rounded-xl animate-on-scroll">
                     <button class="accordion-toggle w-full text-left p-6 flex justify-between items-center" aria-expanded="false">
                         <span class="text-xl font-semibold text-rose-400">The Data Acquisition Protocol (System Reset)</span>
                     </button>
                     <div class="accordion-content">
-                        <div class="pb-6 space-y-4">
-                           <div class="warning"><p><strong class="text-white">Redesigned Protocol:</strong> A system lapse is not a moral failure. It is an automatic trigger that provides valuable data. It is a gift.</p></div>
+                        <div class="p-6 space-y-4">
+                           <div class="warning"><p>A system lapse is not a moral failure. It is an automatic trigger that provides valuable data. It is a gift.</p></div>
                            <ol class="list-decimal list-inside space-y-2">
-                               <li><strong class="text-white">Acknowledge & Declare Explorer Mode:</strong> State, "The experiment has produced new data. I am now in Explorer Mode."</li>
-                               <li><strong class="text-white">Isolate the Variable:</strong> Ask clarifying questions with curiosity, not judgment.</li>
-                               <li><strong class="text-white">Log the Data Point:</strong> Write down your finding.</li>
-                               <li><strong class="text-white">Formulate a New Hypothesis:</strong> Propose one small, testable adjustment.</li>
-                               <li><strong class="text-white">Execute a 'Proof of Identity' Win:</strong> Perform one 2-minute action to regain momentum.</li>
+                               <li><strong>Acknowledge & Declare Explorer Mode:</strong> The moment you recognize a system lapse, state, "The experiment has produced new data. I am now in Explorer Mode." This immediately removes the emotional charge of failure.</li>
+                               <li><strong>Isolate the Variable (Curiosity, not Judgment):</strong> Ask clarifying questions. "What was the trigger? What assumption was proven false?"</li>
+                               <li><strong>Log the Data Point:</strong> Write down your finding. (e.g., "Data: Trying to do a deep work block at 3 PM consistently fails due to low energy.")</li>
+                               <li><strong>Formulate a New Hypothesis:</strong> Based on the data, propose one small, testable adjustment for tomorrow.</li>
+                               <li><strong>Execute a 'Proof of Identity' Win:</strong> Perform one 2-minute action to immediately regain momentum.</li>
                            </ol>
                         </div>
                     </div>
@@ -350,37 +274,25 @@
 
     </main>
     
-    <!-- Back to Top Button -->
-    <button id="to-top-button" title="Go To Top"
-        class="hidden fixed z-50 bottom-10 right-10 p-4 border-0 w-14 h-14 rounded-full shadow-md bg-violet-600 hover:bg-violet-700 text-white text-lg font-semibold transition-colors duration-300">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-            <path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" />
-        </svg>
+    <button id="to-top-button" title="Go To Top" class="hidden fixed z-50 bottom-10 right-10 p-4 w-14 h-14 rounded-full shadow-lg bg-violet-600 hover:bg-violet-700 text-white transition-all duration-300 transform hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path d="M12 4l8 8h-6v8h-4v-8H4l8-8z" /></svg>
     </button>
 
-    <footer class="text-center p-8 text-gray-500 border-t border-gray-800">
+    <footer class="text-center p-8 text-gray-500 border-t border-gray-800/50">
         <p>The Antifragile Blueprint 18.0 &copy; 2025</p>
         <p class="text-sm">Frankfurt am Main, Germany | August 21, 2025</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // --- Mobile Menu Functionality ---
+            // --- Mobile Menu ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            mobileNavLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
-            
-            mobileNavLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
-                });
-            });
-
-            // --- Accordion Functionality ---
+            // --- Accordion ---
             const accordionItems = document.querySelectorAll('.accordion-item');
             accordionItems.forEach(item => {
                 const toggle = item.querySelector('.accordion-toggle');
@@ -399,51 +311,52 @@
 
                 toggle.addEventListener('click', () => {
                     const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+                    
+                    // Close all other accordions
+                    document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                         if (otherItem !== item) {
+                            const otherToggle = otherItem.querySelector('.accordion-toggle');
+                            const otherContent = otherItem.querySelector('.accordion-content');
+                            const otherIcon = otherToggle.querySelector('svg');
+                            otherToggle.setAttribute('aria-expanded', 'false');
+                            otherContent.style.maxHeight = null;
+                            if(otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                         }
+                    });
 
-                    // Close all other accordions in the same section
-                    const parentSection = item.closest('section');
-                    if (parentSection) {
-                        parentSection.querySelectorAll('.accordion-item').forEach(otherItem => {
-                            if (otherItem !== item) {
-                                const otherToggle = otherItem.querySelector('.accordion-toggle');
-                                const otherContent = otherItem.querySelector('.accordion-content');
-                                const otherIcon = otherItem.querySelector('.accordion-toggle svg');
-                                otherToggle.setAttribute('aria-expanded', 'false');
-                                otherContent.style.maxHeight = null;
-                                otherContent.style.padding = '0 1.5rem';
-                                if(otherIcon) otherIcon.style.transform = 'rotate(0deg)';
-                            }
-                        });
-                    }
-
-                    if (isExpanded) {
-                        toggle.setAttribute('aria-expanded', 'false');
-                        content.style.maxHeight = null;
-                        content.style.padding = '0 1.5rem';
-                        if(icon) icon.style.transform = 'rotate(0deg)';
-                    } else {
+                    if (!isExpanded) {
                         toggle.setAttribute('aria-expanded', 'true');
                         content.style.maxHeight = content.scrollHeight + "px";
-                        content.style.padding = '0 1.5rem 1.5rem';
                         if(icon) icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        toggle.setAttribute('aria-expanded', 'false');
+                        content.style.maxHeight = null;
+                        if(icon) icon.style.transform = 'rotate(0deg)';
                     }
                 });
             });
             
+            // --- Scroll Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
             // --- Back to Top Button ---
             const toTopButton = document.getElementById('to-top-button');
-
-            window.onscroll = function () {
+            window.onscroll = () => {
                 if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
                     toTopButton.classList.remove('hidden');
                 } else {
                     toTopButton.classList.add('hidden');
                 }
             };
-
-            toTopButton.onclick = function () {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
+            toTopButton.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
 
